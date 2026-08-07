@@ -1,1 +1,0 @@
-<?php if ( ! defined( 'ABSPATH' ) ) { exit; }  return array('dependencies' => array('react', 'react-dom', 'wp-api-fetch', 'wp-block-editor', 'wp-components', 'wp-data', 'wp-element', 'wp-i18n', 'wp-plugins', 'wp-rich-text'), 'version' => '9d7a900d080605efd51f');
