@@ -1,0 +1,15 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html><head><meta charset="UTF-8"></head><body><p>{% import 'elementor/macros' as m %}
+{%- set classes = settings.classes | merge( [ base_styles.base ] ) | join(' ') -%}
+&lt;{{ settings.tag | e('html_tag') }} class="{{ classes }}" data-interaction-id="{{ interaction_id }}"
+	{{- m.render_custom_attributes(settings) }}&gt;
+{%- if settings.link is defined and settings.link.href is defined and settings.link.href is not empty -%}
+	&lt;{{ settings.link.tag | default('a') | e('html_tag') }}
+		{{- m.render_link_attributes(settings.link) }} class="{{ base_styles['link-base'] }}"&gt;
+		{{ settings.paragraph | striptags('<b><strong><sup><sub><s><em><u><ul></ul><ol><li><blockquote><a><del><span><br>') | raw }}
+	{{ settings.link.tag | default('a') | e('html_tag') }}&gt;
+{%- else -%}
+	{{ settings.paragraph | striptags('<b><strong><sup><sub><s><em><u><ul></ul><ol><li><blockquote><a><del><span><br>') | raw }}
+{%- endif %}
+{{ settings.tag | e('html_tag') }}&gt;
+</span></del></a></blockquote></li></ol></u></em></s></sub></sup></strong></b></span></del></a></blockquote></li></ol></u></em></s></sub></sup></strong></b></p></body></html>

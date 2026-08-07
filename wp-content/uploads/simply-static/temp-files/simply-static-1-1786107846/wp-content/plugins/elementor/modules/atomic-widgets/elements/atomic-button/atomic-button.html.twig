@@ -1,0 +1,16 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html><head><meta charset="UTF-8"></head><body><p>{% import 'elementor/macros' as m %}
+{%- set allowed_tags = '<b><strong><sup><sub><s><em><i><u><del><span><br>' -%}
+{%- set classes = settings.classes | merge( [ base_styles.base ] ) | join(' ') -%}
+{%- if settings.link is defined and settings.link.href is defined and settings.link.href is not empty -%}
+	&lt;{{ settings.link.tag | default('a') | e('html_tag') }}
+		{{- m.render_link_attributes(settings.link) }} class="{{ classes }}" data-interaction-id="{{ interaction_id }}"
+		{{- m.render_custom_attributes(settings) }}&gt;
+		{{ settings.text | striptags(allowed_tags) | raw }}
+	{{ settings.link.tag | default('a') | e('html_tag') }}&gt;
+{%- else -%}
+	<button class="{{ classes }}" data-interaction-id="{{ interaction_id }}" m.render_custom_attributes>
+		{{ settings.text | striptags(allowed_tags) | raw }}
+	</button>
+{%- endif %}
+</span></del></u></i></em></s></sub></sup></strong></b></p></body></html>
