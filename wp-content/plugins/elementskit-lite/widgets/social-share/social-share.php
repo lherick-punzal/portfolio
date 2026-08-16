@@ -12,9 +12,8 @@ class ElementsKit_Widget_Social_Share extends Widget_Base {
 
     public $base;
     
-    public function __construct( $data = [], $args = null ) {
-		parent::__construct( $data, $args );
-		$this->add_script_depends('goodshare');
+	public function get_script_depends() {
+		return ['goodshare'];
 	}
 
     public function get_name() {
@@ -40,6 +39,11 @@ class ElementsKit_Widget_Social_Share extends Widget_Base {
     public function get_help_url() {
         return 'https://wpmet.com/doc/social-share/';
     }
+
+	public function get_style_depends() {
+		return ['ekit-social-share'];
+	}
+
     protected function is_dynamic_content(): bool {
         return false;
     }
@@ -260,7 +264,7 @@ class ElementsKit_Widget_Social_Share extends Widget_Base {
 				'default' => '#222222',
 				'selectors' => [
                     '{{WRAPPER}} {{CURRENT_ITEM}} > div' => 'color: {{VALUE}};',
-                    '{{WRAPPER}} {{CURRENT_ITEM}} > div svg path' => 'stroke: {{VALUE}}; fill: {{VALUE}};',
+                    '{{WRAPPER}} {{CURRENT_ITEM}} > div svg' => 'fill: {{VALUE}};',
 				],
 			]
 		);
@@ -321,7 +325,7 @@ class ElementsKit_Widget_Social_Share extends Widget_Base {
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
                     '{{WRAPPER}} {{CURRENT_ITEM}} > div:hover' => 'color: {{VALUE}};',
-                    '{{WRAPPER}} {{CURRENT_ITEM}} > div:hover svg path' => 'stroke: {{VALUE}}; fill: {{VALUE}};'
+                    '{{WRAPPER}} {{CURRENT_ITEM}} > div:hover svg' => 'fill: {{VALUE}};'
 				],
 			]
 		);
@@ -689,7 +693,17 @@ class ElementsKit_Widget_Social_Share extends Widget_Base {
                 
                 if($icon['ekit_socialshare_icons'] != ''): ?>
                 <li class="elementor-repeater-item-<?php echo esc_attr( $icon[ '_id' ] ); ?>" data-social="<?php echo esc_attr((preg_replace('/[#$%^&*()+=\-\[\]\';,.\/{}|":<>?~\\\\ ]/', '', strtolower($icon['ekit_socialshare_label_text']))))?>">
+                    <?php
+                        // Human-readable network name for the accessible label.
+                        $ekit_share_network = ( '' !== $icon['ekit_socialshare_label'] )
+                            ? $icon['ekit_socialshare_label']
+                            : ucwords( preg_replace('/[#$%^&*()+=\-\[\]\';,.\/{}|":<>?~\\\\]/', ' ', $icon['ekit_socialshare_label_text']) );
+                        /* translators: %s: social network name (e.g. Facebook). */
+                        $ekit_share_label = sprintf( esc_attr__( 'Share on %s', 'elementskit-lite' ), $ekit_share_network );
+                    ?>
                     <div class="<?php echo esc_attr((preg_replace('/[#$%^&*()+=\-\[\]\';,.\/{}|":<>?~\\\\ ]/', '', strtolower($icon['ekit_socialshare_label_text']))))?>">
+                    <?php // Keyboard-operable share control; reset to inherit the wrapping div in social-share.scss. ?>
+                    <button type="button" aria-label="<?php echo esc_attr( $ekit_share_label ); ?>">
                         <?php if($settings['ekit_socialshare_style'] != 'text' && $settings['ekit_socialshare_style_icon_position'] == 'before'): ?>
 
                         <?php
@@ -731,6 +745,7 @@ class ElementsKit_Widget_Social_Share extends Widget_Base {
                             }
                         ?>
                         <?php endif; ?>
+                    </button>
                     </div>
                 </li>
                 <?php endif; ?>

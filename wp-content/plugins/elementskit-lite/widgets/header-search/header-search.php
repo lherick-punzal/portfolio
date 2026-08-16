@@ -16,9 +16,14 @@ class ElementsKit_Widget_Header_Search extends Widget_Base
 		parent::__construct( $data, $args );
 	}
 
+    public function get_style_depends() {
+        return ['magnific-popup', 'ekit-header-search'];
+    }
+
 	public function get_script_depends() {
 		return ['ekit-header-search', 'magnific-popup'];
 	}
+
 
     public function get_name() {
         return Handler::get_name();
@@ -691,8 +696,11 @@ class ElementsKit_Widget_Header_Search extends Widget_Base
 
 		$ekit_search_link = apply_filters('ekit_search_link', home_url( '/'.$language_prefix ));
 		$placeholder_and_label = $settings['ekit_search_placeholder_text'];
+		// Persistent accessible name for the search field: reuse the placeholder text
+		// when set (placeholders alone are an unreliable label), otherwise "Search".
+		$ekit_search_field_label = ( '' !== trim( (string) $placeholder_and_label ) ) ? $placeholder_and_label : esc_html__( 'Search', 'elementskit-lite' );
         ?>
-        <a href="#ekit_modal-popup-<?php echo esc_attr($this->get_id()); ?>" class="ekit_navsearch-button ekit-modal-popup" aria-label="navsearch-button">
+        <a href="#ekit_modal-popup-<?php echo esc_attr($this->get_id()); ?>" class="ekit_navsearch-button ekit-modal-popup" role="button" aria-haspopup="dialog" aria-label="<?php echo esc_attr__( 'Search', 'elementskit-lite' ); ?>">
             <?php
                 // new icon
                 $migrated = isset( $settings['__fa4_migrated']['ekit_search_icons'] );
@@ -710,12 +718,12 @@ class ElementsKit_Widget_Header_Search extends Widget_Base
         </a>
         <!-- language switcher strart -->
         <!-- xs modal -->
-        <div class="zoom-anim-dialog mfp-hide ekit_modal-searchPanel" id="ekit_modal-popup-<?php echo esc_attr($this->get_id()); ?>">
+        <div class="zoom-anim-dialog mfp-hide ekit_modal-searchPanel" id="ekit_modal-popup-<?php echo esc_attr($this->get_id()); ?>" role="dialog" aria-modal="true" aria-label="<?php echo esc_attr__( 'Search', 'elementskit-lite' ); ?>">
             <div class="ekit-search-panel">
             <!-- Polylang search - thanks to Alain Melsens -->
                 <form role="search" method="get" class="ekit-search-group" action="<?php echo esc_url( $ekit_search_link ); ?>">
-                    <input type="search" class="ekit_search-field" aria-label="search-form" placeholder="<?php echo esc_attr($placeholder_and_label); ?>" value="<?php echo esc_attr(get_search_query()); ?>" name="s">
-					<button type="submit" class="ekit_search-button" aria-label="search-button">
+                    <input type="search" class="ekit_search-field" aria-label="<?php echo esc_attr($ekit_search_field_label); ?>" placeholder="<?php echo esc_attr($placeholder_and_label); ?>" value="<?php echo esc_attr(get_search_query()); ?>" name="s">
+					<button type="submit" class="ekit_search-button" aria-label="<?php echo esc_attr__( 'Search', 'elementskit-lite' ); ?>">
                         <?php
                             // new icon
                             $migrated = isset( $settings['__fa4_migrated']['ekit_search_icons'] );

@@ -13,7 +13,11 @@ class ElementsKit_Widget_Image_Accordion extends Widget_Base {
 	public $base;
 
 	public function get_script_depends() {
-		return ['ekit-image-accordion'];
+		return [ 'ekit-image-accordion'];
+	}
+
+	public function get_style_depends() {
+		return ['ekit-button','ekit-image-accordion'];
 	}
 
     public function get_name() {
@@ -378,7 +382,7 @@ class ElementsKit_Widget_Image_Accordion extends Widget_Base {
           ],
         ]
       );
-      
+
 	   $this->add_control(
         'ekit_img_accordion_active_background_text',
         [
@@ -498,11 +502,11 @@ class ElementsKit_Widget_Image_Accordion extends Widget_Base {
 			  'default' => '#fff',
 			  'selectors' => [
                 '{{WRAPPER}} .elementskit-image-accordion-wraper .elementskit-accordion-title-wraper .elementskit-accordion-title ' => 'color: {{VALUE}};',
-                '{{WRAPPER}} .elementskit-image-accordion-wraper .elementskit-accordion-title-wraper .elementskit-accordion-title svg path' => 'stroke: {{VALUE}}; fill: {{VALUE}};',
+                '{{WRAPPER}} .elementskit-image-accordion-wraper .elementskit-accordion-title-wraper .elementskit-accordion-title svg' => 'fill: {{VALUE}};',
 			  ],
 			]
           );
-          
+
           $this->add_responsive_control(
             'ekit_img_accordion_title_icon_size',
             [
@@ -970,6 +974,7 @@ class ElementsKit_Widget_Image_Accordion extends Widget_Base {
 					'name' => 'ekit_ia_' . $this->get_id(),
 					'id' => 'ekit_ia_' . $this->get_id() .'_'. $key,
 					'class' => 'elementskit-single-image-accordion--input',
+					'aria-label' => ( '' !== $item['ekit_img_accordion_title'] ) ? $item['ekit_img_accordion_title'] : sprintf( esc_attr__( 'Item %d', 'elementskit-lite' ), $key + 1 ),
 				] );
 
 				if($item['ekit_img_accordion_active'] == 'yes') {
@@ -992,7 +997,7 @@ class ElementsKit_Widget_Image_Accordion extends Widget_Base {
 					$this->add_render_attribute( 'wrap-link-' . $key, 'data-active', $item['ekit_img_accordion_active'] );
 				}
                 ?>
-                <input <?php $this->print_render_attribute_string( 'wrap-input-' . $key ); ?> hidden>
+                <input <?php $this->print_render_attribute_string( 'wrap-input-' . $key ); ?>>
                 <label <?php $this->print_render_attribute_string( 'wrap-link-' . $key ); ?>>
                     <span class="elementskit-accordion-content">
 						<?php if($item['ekit_img_accordion_enable_pupup'] == 'yes' || $item['ekit_img_accordion_enable_project_link'] == 'yes') {
@@ -1001,24 +1006,24 @@ class ElementsKit_Widget_Image_Accordion extends Widget_Base {
 							}
 							?>
 							<span class="elementskit-icon-wraper ekit-image-accordion-actions">
-							<?php if($item['ekit_img_accordion_enable_pupup'] == 'yes') { 
+							<?php if($item['ekit_img_accordion_enable_pupup'] == 'yes') {
 
-								$this->add_lightbox_data_attributes( 'link' . $key, 
-									$item['ekit_img_accordion_bg']['id'], 
-									$item['ekit_img_accordion_enable_pupup'], 
-									$this->get_id() 
+								$this->add_lightbox_data_attributes( 'link' . $key,
+									$item['ekit_img_accordion_bg']['id'],
+									$item['ekit_img_accordion_enable_pupup'],
+									$this->get_id()
 								);
 
-								$this->add_render_attribute( 'link' . $key, 
+								$this->add_render_attribute( 'link' . $key,
 									[
 										'href' =>  esc_url($item['ekit_img_accordion_bg']['url']),
-										'aria-label' => "pupup-button", 
+										'aria-label' => esc_attr__( 'View image', 'elementskit-lite' ),
 										'class' => "icon-outline circle",
 									]
 								);
 								?>
 									<a <?php $this->print_render_attribute_string( 'link' . $key ); ?>>
-									<?php 
+									<?php
 										$migrated = isset( $item['__fa4_migrated']['ekit_img_accordion_pup_up_icons'] );
 										// Check if its a new widget without previously selected icon using the old Icon control
 										$is_new = empty( $item['ekit_img_accordion_pup_up_icon'] );
@@ -1037,7 +1042,7 @@ class ElementsKit_Widget_Image_Accordion extends Widget_Base {
 							<?php if($item['ekit_img_accordion_enable_project_link'] == 'yes') {
 									if ( ! empty( $item['ekit_img_accordion_project_link']['url'] ) ) {
 										$this->add_link_attributes( 'button-2' . $key, $item['ekit_img_accordion_project_link'] );
-										$this->add_render_attribute( 'button-2' . $key, ['role' => "link", 'aria-label' => "button-link"] );
+										$this->add_render_attribute( 'button-2' . $key, ['role' => "link", 'aria-label' => esc_attr__( 'View project', 'elementskit-lite' )] );
 									}
 								?>
 									<a <?php $this->print_render_attribute_string( 'button-2' . esc_attr($key) ); ?> class="icon-outline circle">

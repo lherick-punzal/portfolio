@@ -35,6 +35,11 @@ class ElementsKit_Widget_Image_Box extends Widget_Base {
     public function get_help_url() {
         return 'https://wpmet.com/doc/image-box-2/';
     }
+
+    public function get_style_depends() {
+        return ['ekit-button','ekit-image-box'];
+    }
+
     protected function is_dynamic_content(): bool {
         return false;
     }
@@ -445,7 +450,7 @@ class ElementsKit_Widget_Image_Box extends Widget_Base {
                 'type' => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .elementskit-info-image-box.floating-style .elementskit-box-body .elementskit-info-box-title > i ' => 'color: {{VALUE}};',
-                    '{{WRAPPER}} .elementskit-info-image-box.floating-style .elementskit-box-body .elementskit-info-box-title > svg path' => 'stroke: {{VALUE}}; fill: {{VALUE}};',
+                    '{{WRAPPER}} .elementskit-info-image-box.floating-style .elementskit-box-body .elementskit-info-box-title > svg' => 'fill: {{VALUE}};',
                 ],
             ]
         );
@@ -489,7 +494,7 @@ class ElementsKit_Widget_Image_Box extends Widget_Base {
                 'type' => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .elementskit-info-image-box.floating-style:hover .elementskit-box-body .elementskit-info-box-title > i ' => 'color: {{VALUE}}',
-                    '{{WRAPPER}} .elementskit-info-image-box.floating-style:hover .elementskit-box-body .elementskit-info-box-title > svg path' => 'stroke: {{VALUE}}; fill: {{VALUE}};',
+                    '{{WRAPPER}} .elementskit-info-image-box.floating-style:hover .elementskit-box-body .elementskit-info-box-title > svg' => 'fill: {{VALUE}};',
                 ],
             ]
         );
@@ -505,7 +510,7 @@ class ElementsKit_Widget_Image_Box extends Widget_Base {
 				'style' => 'thick',
 			]
         );
-        
+
         $this->add_responsive_control(
 			'ekit_image_box_image_floating_box_icon_font_size',
 			[
@@ -1176,7 +1181,7 @@ class ElementsKit_Widget_Image_Box extends Widget_Base {
                 'label' => esc_html__( 'Spacing', 'elementskit-lite' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em' ],
-                'default' => [  
+                'default' => [
                     'top' => '0',
                     'right' => '0',
                     'bottom' => '20',
@@ -1198,7 +1203,7 @@ class ElementsKit_Widget_Image_Box extends Widget_Base {
                 'selector' => '{{WRAPPER}} .elementskit-info-image-box .elementskit-box-content :is(.elementskit-info-box-title, .elementskit-info-box-title a )',
             ]
         );
-        
+
         $this->start_controls_tabs('ekit_image_box_style_heading_tabs');
 
         $this->start_controls_tab(
@@ -1216,7 +1221,7 @@ class ElementsKit_Widget_Image_Box extends Widget_Base {
                 'selectors' => [
                     '{{WRAPPER}} .elementskit-info-image-box .elementskit-info-box-title ' => 'color: {{VALUE}};',
                     '{{WRAPPER}} .elementskit-info-image-box .elementskit-info-box-title a' => 'color: {{VALUE}};',
-                    '{{WRAPPER}} .elementskit-info-image-box .elementskit-info-box-title svg path'    => 'stroke: {{VALUE}}; fill: {{VALUE}};'
+                    '{{WRAPPER}} .elementskit-info-image-box .elementskit-info-box-title svg'    => 'fill: {{VALUE}};'
                 ],
             ]
         );
@@ -1238,7 +1243,7 @@ class ElementsKit_Widget_Image_Box extends Widget_Base {
                 'selectors' => [
                     '{{WRAPPER}} .elementskit-info-image-box:hover .elementskit-info-box-title ' => 'color: {{VALUE}}',
                     '{{WRAPPER}} .elementskit-info-image-box:hover .elementskit-info-box-title a' => 'color: {{VALUE}}',
-                    '{{WRAPPER}} .elementskit-info-image-box:hover .elementskit-info-box-title svg path'    => 'stroke: {{VALUE}}; fill: {{VALUE}};'
+                    '{{WRAPPER}} .elementskit-info-image-box:hover .elementskit-info-box-title svg'    => 'fill: {{VALUE}};'
                 ],
             ]
         );
@@ -1263,7 +1268,7 @@ class ElementsKit_Widget_Image_Box extends Widget_Base {
                 'label' => esc_html__( 'Spacing', 'elementskit-lite' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%', 'em' ],
-                'default' => [  
+                'default' => [
                     'top' => '0',
                     'right' => '0',
                     'bottom' => '14',
@@ -1285,7 +1290,7 @@ class ElementsKit_Widget_Image_Box extends Widget_Base {
                 'selector' => '{{WRAPPER}} .elementskit-info-image-box .elementskit-box-style-content',
             ]
         );
-        
+
         $this->start_controls_tabs('ekit_image_box_style_description_tabs');
 
         $this->start_controls_tab(
@@ -1402,7 +1407,7 @@ class ElementsKit_Widget_Image_Box extends Widget_Base {
                 'default' => '',
                 'selectors' => [
                     '{{WRAPPER}} .elementskit-info-image-box .elementskit-btn' => 'color: {{VALUE}};',
-                    '{{WRAPPER}} .elementskit-info-image-box .elementskit-btn svg path' => 'stroke: {{VALUE}}; fill: {{VALUE}};', 
+                    '{{WRAPPER}} .elementskit-info-image-box .elementskit-btn svg' => 'fill: {{VALUE}};',
                 ],
             ]
         );
@@ -1466,7 +1471,7 @@ class ElementsKit_Widget_Image_Box extends Widget_Base {
                 'type' => Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .elementskit-info-image-box .elementskit-btn:hover' => 'color: {{VALUE}};',
-                    '{{WRAPPER}} .elementskit-info-image-box .elementskit-btn:hover svg path' => 'stroke: {{VALUE}}; fill: {{VALUE}};', 
+                    '{{WRAPPER}} .elementskit-info-image-box .elementskit-btn:hover svg' => 'fill: {{VALUE}};',
                 ],
             ]
         );
@@ -1580,7 +1585,7 @@ class ElementsKit_Widget_Image_Box extends Widget_Base {
         // Button
         $btn_text = $settings['ekit_image_box_btn_text'];
 
-        
+
         if ( ! empty( $settings['ekit_image_box_btn_url']['url'] ) ) {
             $this->add_link_attributes( 'button-2', $settings['ekit_image_box_btn_url'] );
         }
@@ -1631,12 +1636,12 @@ class ElementsKit_Widget_Image_Box extends Widget_Base {
                                 }
                             ?>
 
-                        <?php endif; 
+                        <?php endif;
                             echo wp_kses($settings['ekit_image_box_title_text'], \ElementsKit_Lite\Utils::get_kses_array());
                         ?>
 
                         <?php if(($settings['ekit_image_box_front_title_icons'] != '') && ($settings['ekit_image_box_front_title_icon_position'] == 'right') && ($settings['ekit_image_box_style_simple'] == 'floating-style')) : ?>
-                                
+
                             <?php
                                 // new icon
                                 $migrated = isset( $settings['__fa4_migrated']['ekit_image_box_front_title_icons'] );
@@ -1693,7 +1698,7 @@ class ElementsKit_Widget_Image_Box extends Widget_Base {
                                 </a>
                                 <?php elseif ($settings['ekit_image_box_icon_align'] == 'left') : ?>
                                 <a <?php echo $this->get_render_attribute_string( 'button-2' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Already escaped by elementor?> class="elementskit-btn whitespace--normal">
-                                    
+
                                     <?php
                                         // new icon
                                         $migrated = isset( $settings['__fa4_migrated']['ekit_image_box_icons'] );

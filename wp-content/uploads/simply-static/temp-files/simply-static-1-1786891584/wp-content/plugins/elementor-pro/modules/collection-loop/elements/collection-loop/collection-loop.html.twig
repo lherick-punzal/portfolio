@@ -1,0 +1,11 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html><head><meta charset="UTF-8"></head><body><p>{% import 'elementor/macros' as m %}
+{%- set pagination_on = settings.pagination | default(false) -%}
+{%- set e_settings = {
+    'pagination': pagination_on,
+    'pagination_load_type': settings.pagination_load_type | default('page_reload'),
+} -%}
+</p><div class="{{ m.render_base_classes(id, base_styles, settings) }} {{ editor_classes | default('') }}" m.render_data_attributes type interaction_id data-e-settings="{{ e_settings | json_encode | e('html_attr') }}" m.render_custom_attributes editor_attributes>
+    <!-- elementor-children-placeholder -->
+</div>
+</body></html>

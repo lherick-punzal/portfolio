@@ -36,6 +36,10 @@ class ElementsKit_Widget_Dual_Button extends Widget_Base {
         return 'https://wpmet.com/doc/dual-button/';
     }
 
+    public function get_style_depends() {
+        return ['ekit-dual-button'];
+    }
+
     protected function is_dynamic_content(): bool {
         return false;
     }
@@ -444,7 +448,7 @@ class ElementsKit_Widget_Dual_Button extends Widget_Base {
                             'default'   =>'#ffffff',
                             'selectors' => [
                                 '{{WRAPPER}} .ekit-double-btn.ekit-double-btn-one' => 'color: {{VALUE}};',
-                                '{{WRAPPER}} .ekit-double-btn.ekit-double-btn-one svg path' => 'stroke: {{VALUE}}; fill: {{VALUE}};',
+                                '{{WRAPPER}} .ekit-double-btn.ekit-double-btn-one svg' => 'fill: {{VALUE}};',
                             ],
                         ]
                     );
@@ -585,7 +589,7 @@ class ElementsKit_Widget_Dual_Button extends Widget_Base {
                             'default'   =>'#ffffff',
                             'selectors' => [
                                 '{{WRAPPER}} .ekit-double-btn.ekit-double-btn-one:hover' => 'color: {{VALUE}};',
-                                '{{WRAPPER}} .ekit-double-btn.ekit-double-btn-one:hover svg path' => 'stroke: {{VALUE}}; fill: {{VALUE}};',
+                                '{{WRAPPER}} .ekit-double-btn.ekit-double-btn-one:hover svg' => 'fill: {{VALUE}};',
                             ],
                         ]
                     );
@@ -664,7 +668,7 @@ class ElementsKit_Widget_Dual_Button extends Widget_Base {
                             'default'   =>'#ffffff',
                             'selectors' => [
                                 '{{WRAPPER}} .ekit-double-btn.ekit-double-btn-two' => 'color: {{VALUE}};',
-                                '{{WRAPPER}} .ekit-double-btn.ekit-double-btn-two svg path' => 'stroke: {{VALUE}}; fill: {{VALUE}};',
+                                '{{WRAPPER}} .ekit-double-btn.ekit-double-btn-two svg' => 'fill: {{VALUE}};',
                             ],
                         ]
                     );
@@ -803,7 +807,7 @@ class ElementsKit_Widget_Dual_Button extends Widget_Base {
                             'default'   =>'#ffffff',
                             'selectors' => [
                                 '{{WRAPPER}} .ekit-double-btn.ekit-double-btn-two:hover' => 'color: {{VALUE}};',
-                                '{{WRAPPER}} .ekit-double-btn.ekit-double-btn-two:hover svg path' => 'stroke: {{VALUE}}; fill: {{VALUE}};',
+                                '{{WRAPPER}} .ekit-double-btn.ekit-double-btn-two:hover svg' => 'fill: {{VALUE}};',
                             ],
                         ]
                     );

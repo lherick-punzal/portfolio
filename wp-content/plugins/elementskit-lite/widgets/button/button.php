@@ -35,6 +35,11 @@ class ElementsKit_Widget_Button extends Widget_Base {
     public function get_help_url() {
         return 'https://wpmet.com/doc/button/';
     }
+
+    public function get_style_depends() {
+        return ['ekit-button'];
+    }
+
     protected function is_dynamic_content(): bool {
         return false;
     }
@@ -593,13 +598,13 @@ class ElementsKit_Widget_Button extends Widget_Base {
 				<a <?php $this->print_render_attribute_string( 'button' ); ?>>
 					<?php
 						echo esc_html( $btn_text );
-						Icons_Manager::render_icon($settings['ekit_btn_icons']);
+						Icons_Manager::render_icon( $settings['ekit_btn_icons'], [ 'aria-hidden' => 'true' ] );
 					?>
 				</a>
 			<?php elseif ($icon_align == 'left') : ?>
 				<a <?php $this->print_render_attribute_string( 'button' ); ?>>
 					<?php
-					Icons_Manager::render_icon($settings['ekit_btn_icons']);
+					Icons_Manager::render_icon( $settings['ekit_btn_icons'], [ 'aria-hidden' => 'true' ] );
 					echo esc_html( $btn_text );
 					?>
 				</a>

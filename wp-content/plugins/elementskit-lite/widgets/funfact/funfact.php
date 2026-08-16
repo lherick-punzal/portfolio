@@ -15,7 +15,7 @@ class ElementsKit_Widget_Funfact extends Widget_Base {
 	public $base;
 
 	public function get_style_depends() {
-		$deps = [];
+		$deps = ['ekit-funfact'];
 
 		if ( Plugin::$instance->editor->is_edit_mode() || Plugin::$instance->preview->is_preview_mode() ) {
 			$deps[] = 'odometer';
@@ -700,7 +700,7 @@ class ElementsKit_Widget_Funfact extends Widget_Base {
 				'default'   => '',
 				'selectors' => [
 					'{{WRAPPER}} .elementskit-funfact:hover .elementskit-funfact-icon' => 'color: {{VALUE}};',
-					'{{WRAPPER}} .elementskit-funfact:hover svg path'                  => 'stroke: {{VALUE}}; fill: {{VALUE}};',
+					'{{WRAPPER}} .elementskit-funfact:hover svg'                  => 'fill: {{VALUE}};',
 				],
 			]
 		);

@@ -16,7 +16,7 @@ class ElementsKit_Widget_Video extends Widget_Base {
 	}
 
 	public function get_style_depends() {
-		return ['wp-mediaelement'];
+		return ['wp-mediaelement', 'magnific-popup', 'ekit-video'];
 	}
 
 	public function get_script_depends() {
@@ -1298,8 +1298,8 @@ class ElementsKit_Widget_Video extends Widget_Base {
 				'selectors' => [
 					'{{WRAPPER}} .ekit-video-popup-btn' => 'color: {{VALUE}};',
 					'{{WRAPPER}} .ekit-video-inline-btn' => 'color: {{VALUE}};',
-					'{{WRAPPER}} .ekit-video-popup-btn svg path'	=> 'stroke: {{VALUE}}; fill: {{VALUE}};',
-					'{{WRAPPER}} .ekit-video-inline-btn svg path'	=> 'stroke: {{VALUE}}; fill: {{VALUE}};',
+					'{{WRAPPER}} .ekit-video-popup-btn svg'	=> 'fill: {{VALUE}};',
+					'{{WRAPPER}} .ekit-video-inline-btn svg' => 'fill: {{VALUE}};',
 				],
 			]
 		);
@@ -1329,8 +1329,8 @@ class ElementsKit_Widget_Video extends Widget_Base {
 				'selectors' => [
 					'{{WRAPPER}} .ekit-video-popup-btn:hover' => 'color: {{VALUE}};',
 					'{{WRAPPER}} .ekit-video-inline-btn:hover' => 'color: {{VALUE}};',
-					'{{WRAPPER}} .ekit-video-popup-btn:hover svg path'	=> 'stroke: {{VALUE}}; fill: {{VALUE}};',
-					'{{WRAPPER}} .ekit-video-inline-btn:hover svg path'	=> 'stroke: {{VALUE}}; fill: {{VALUE}};',
+					'{{WRAPPER}} .ekit-video-popup-btn:hover svg'	=> 'fill: {{VALUE}};',
+					'{{WRAPPER}} .ekit-video-inline-btn:hover svg'	=> 'fill: {{VALUE}};',
 				],
 			]
 		);

@@ -48,6 +48,7 @@ class Init {
 
 		var ElementsKitLayoutManager = {
 			"defaultTab": "pages",
+			"addTemplateTitle": "<?php echo esc_attr__( 'Add ElementsKit Template', 'elementskit-lite' ); ?>",
 			"nonce": "<?php echo esc_attr(wp_create_nonce( 'wp_rest' )); ?>",
 			"buttonIcon": "<?php echo esc_url( \ElementsKit_Lite\Libs\Framework\Attr::get_url() . 'assets/images/ekit_icon.svg' ); ?>",
 			"infoIcon": "<?php echo  esc_url( $this->url . 'assets/img/info.svg' ); ?>",
@@ -61,6 +62,11 @@ class Init {
 			"banner": {
 				"enable": true,
 				"img": "<?php echo esc_url( $this->url . 'assets/img/banner.jpg' ); ?>",
+				"images": {
+					"pages": "<?php echo esc_url( $this->url . 'assets/img/pages.png' ); ?>",
+					"sections": "<?php echo esc_url( $this->url . 'assets/img/sections.png' ); ?>",
+					"templates": "<?php echo esc_url( $this->url . 'assets/img/template.png' ); ?>"
+				},
 				"link": "https://wpmet.com/layout-manager-banner",
 				"target": '_blank'
 			}

@@ -36,6 +36,10 @@ class ElementsKit_Widget_FAQ extends Widget_Base {
         return 'https://wpmet.com/doc/faq/';
     }
 
+    public function get_style_depends() {
+        return ['ekit-faq'];
+    }
+
     protected function is_dynamic_content(): bool {
         return false;
     }

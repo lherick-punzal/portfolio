@@ -689,6 +689,13 @@ class Widget_List extends \ElementsKit_Lite\Core\Config_List
 					'widget-category' => 'creative', // creative
 					'icon'    => 'ekit ekit-stacked-cards',
 				],
+				'youtube-feed' => [
+					'slug'    => 'youtube-feed',
+					'title'   => 'YouTube Feed',
+					'package' => 'pro-disabled',
+					'widget-category' => 'social-media-feeds', // social media feeds
+					'icon'    => 'ekit ekit-youtube-feed',
+				],
 			)
 		);
 	}

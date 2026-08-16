@@ -4,40 +4,49 @@ namespace ElementsKit_Lite;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * ElementsKit_Lite autoloader.
- * Handles dynamically loading classes only when needed.
+ * ElementsKit_Lite legacy autoloader.
+ *
+ * Handles dynamically loading legacy (non-PSR-4) classes under the
+ * `ElementsKit_Lite` namespace that use underscore-style naming.
+ *
+ * New code should use PSR-4 namespaces (e.g. `ElementsKit\Lite\Core\...`)
+ * and rely on Composer's autoloader (`vendor/autoload.php`) instead.
  *
  * @since 1.0.0
  */
 class Autoloader {
-	
+
 	/**
 	 * Run autoloader.
-	 * Register a function as `__autoload()` implementation.
+	 *
+	 * Registers this class's `autoload()` method as an SPL autoloader.
 	 *
 	 * @since 1.0.0
 	 * @access public
+	 * @return void
 	 */
 	public static function run() {
 		spl_autoload_register( array( __CLASS__, 'autoload' ) );
 	}
-	
+
 	/**
 	 * Autoload.
-	 * For a given class, check if it exist and load it.
+	 *
+	 * For a given class name, resolve the corresponding file path and
+	 * load it if it exists.
 	 *
 	 * @since 1.0.0
 	 * @access private
-	 * @param string $class Class name.
+	 * @param string $class_name Fully qualified class name.
+	 * @return void
 	 */
 	private static function autoload( $class_name ) {
 
-		// If the class being requested does not start with our prefix
-		// we know it's not one in our project.
+		// Bail early if the class isn't part of this namespace.
 		if ( 0 !== strpos( $class_name, __NAMESPACE__ ) ) {
 			return;
 		}
-		
+
 		$file_name = strtolower(
 			preg_replace(
 				array( '/\b' . __NAMESPACE__ . '\\\/', '/([a-z])([A-Z])/', '/_/', '/\\\/' ),
@@ -46,12 +55,9 @@ class Autoloader {
 			)
 		);
 
-		// Compile our path from the corosponding location.
 		$file = \ElementsKit_Lite::plugin_dir() . $file_name . '.php';
-		
-		// If a file is found.
+
 		if ( file_exists( $file ) ) {
-			// Then load it up!
 			require_once $file;
 		}
 	}

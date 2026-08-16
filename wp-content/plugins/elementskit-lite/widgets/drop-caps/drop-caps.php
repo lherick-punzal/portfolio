@@ -36,6 +36,10 @@ class ElementsKit_Widget_Drop_Caps extends Widget_Base {
         return 'https://wpmet.com/doc/dropcaps/';
     }
 
+    public function get_style_depends() {
+        return ['ekit-drop-caps'];
+    }
+
     protected function is_dynamic_content(): bool {
         return false;
     }

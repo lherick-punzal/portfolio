@@ -41,11 +41,11 @@ class ElementsKit_Widget_Client_Logo extends Widget_Base {
     }
 
 	public function get_style_depends() {
-		return ['swiper'];
+		return ['swiper', 'ekit-client-logo'];
 	}
 
 	public function get_script_depends() {
-		return ['ekit-client-logo'];
+		return ['ekit-client-logo', 'swiper'];
 	}
 
     protected function is_dynamic_content(): bool {

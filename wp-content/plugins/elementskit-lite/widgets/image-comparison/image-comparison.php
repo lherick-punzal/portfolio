@@ -10,13 +10,17 @@ class ElementsKit_Widget_Image_Comparison extends Widget_Base {
 	use \ElementsKit_Lite\Widgets\Widget_Notice;
 
     public $base;
-    
+
     public function __construct( $data = [], $args = null ) {
 		parent::__construct( $data, $args );
 	}
 
 	public function get_script_depends() {
-		return ['ekit-image-comparison', 'event.move', 'twentytwenty', 'imagesloaded'];
+		return ['imagesloaded','event.move', 'twentytwenty','ekit-image-comparison'];
+	}
+
+	public function get_style_depends() {
+		return ['twentytwenty','ekit-image-comparison'];
 	}
 
     public function get_name() {
@@ -659,6 +663,7 @@ class ElementsKit_Widget_Image_Comparison extends Widget_Base {
 				'data-label_before' => esc_attr($label_before),
 				'data-move_slider_on_hover' => esc_attr($settings['ekit_img_comparison_move_slider_on_hover']),
 				'data-click_to_move' => esc_attr($settings['ekit_img_comparison_click_to_move']),
+				'data-a11y_label' => esc_attr__( 'Image comparison slider', 'elementskit-lite' ),
 			]
 		);
 

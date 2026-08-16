@@ -12,6 +12,10 @@ class ElementsKit_Widget_Accordion extends Widget_Base {
 	public $base;
 
 	public function get_script_depends() {
+		return ['ui-slim', 'ekit-accordion'];
+	}
+
+	public function get_style_depends() {
 		return ['ekit-accordion'];
 	}
 
@@ -46,9 +50,9 @@ class ElementsKit_Widget_Accordion extends Widget_Base {
 	public function has_widget_inner_wrapper(): bool {
 		return ! Plugin::$instance->experiments->is_feature_active( 'e_optimized_markup' );
 	}
-	
+
     protected function register_controls() {
-        
+
 
         $this->start_controls_section(
             'section_tab', [
@@ -282,7 +286,7 @@ class ElementsKit_Widget_Accordion extends Widget_Base {
                     '{{WRAPPER}} .elementskit-accordion.curve-shape .elementskit-card-header>.elementskit-btn-link[aria-expanded=true]' => 'color: {{VALUE}};'
                 ],
             ]
-        );    
+        );
 
         $this->add_control(
             'ekit_accordion_title__hover_color', [
@@ -327,7 +331,7 @@ class ElementsKit_Widget_Accordion extends Widget_Base {
                     'ekit_accordion_style' => ['curve-shape']
                 ],
                 'selectors'  => [
-                    '{{WRAPPER}} .elementskit-accordion.curve-shape .elementskit-card-header>.elementskit-btn-link[aria-expanded=true] .path' => 'stroke: {{VALUE}};',
+                    '{{WRAPPER}} .elementskit-accordion.curve-shape .elementskit-card-header>.elementskit-btn-link[aria-expanded=true]' => 'fill: {{VALUE}};',
                 ],
             ]
         );
@@ -426,7 +430,7 @@ class ElementsKit_Widget_Accordion extends Widget_Base {
                     'ekit_accordion_style' => ['curve-shape']
                 ],
                 'selectors'  => [
-                    '{{WRAPPER}} .elementskit-accordion .elementskit-card-header>.elementskit-btn-link .path' => 'stroke: {{VALUE}};',
+                    '{{WRAPPER}} .elementskit-accordion .elementskit-card-header>.elementskit-btn-link' => 'fill: {{VALUE}};',
                 ],
             ]
         );
@@ -619,7 +623,7 @@ class ElementsKit_Widget_Accordion extends Widget_Base {
         $this->start_controls_tabs(
             'border_style_tabs'
         );
-        
+
         $this->start_controls_tab(
             'style_open_tab',
             [
@@ -657,7 +661,7 @@ class ElementsKit_Widget_Accordion extends Widget_Base {
                 'selector' => '{{WRAPPER}} .elementskit-accordion > .elementskit-card.active',
             ]
         );
-        
+
         $this->end_controls_tab();
 
         $this->start_controls_tab(
@@ -666,7 +670,7 @@ class ElementsKit_Widget_Accordion extends Widget_Base {
                 'label' => esc_html__( 'CLOSED', 'elementskit-lite' ),
             ]
         );
-        
+
         $this->add_group_control(
             Group_Control_Border::get_type(),
             [
@@ -699,7 +703,7 @@ class ElementsKit_Widget_Accordion extends Widget_Base {
         );
 
         $this->end_controls_tab();
-        
+
         $this->end_controls_tabs();
 
         $this->add_control(
@@ -737,7 +741,7 @@ class ElementsKit_Widget_Accordion extends Widget_Base {
                 'label' => esc_html__( 'Slide Closed Icon', 'elementskit-lite' ),
             ]
         );
-        
+
         $this->add_responsive_control(
             'ekit_accordion_icon_typography_close',
             [
@@ -946,9 +950,9 @@ class ElementsKit_Widget_Accordion extends Widget_Base {
 				],
 			]
 		);
- 
+
         $this->end_controls_section();
-        
+
         $this->insert_pro_message();
 	}
 
@@ -971,21 +975,21 @@ class ElementsKit_Widget_Accordion extends Widget_Base {
             }
         }
         $acc_id = uniqid();
-        
+
         ?>
 
         <div class="elementskit-accordion <?php echo esc_attr( $ekit_accordion_style ); ?>" id="accordion-<?php echo esc_attr($acc_id); ?>">
 
             <?php
-        
+
             foreach ($ekit_accordion_items as $i=>$accorion_content) :
                 $is_active = ($accorion_content['ekit_acc_is_active'] == 'yes') ? ' show collapse' : ' collapse';
                 $is_active = ($ekit_accordion_open_first_slide == 'yes' && $has_user_defined_active_tab == false && $i == 0) ? ' show collapse' : $is_active;
                 ?>
 
                 <div class="elementskit-card <?php echo esc_attr($is_active == ' collapse' ? '' : 'active');  ?>">
-                    <div class="elementskit-card-header" id="primaryHeading-<?php echo esc_attr($i); ?>-<?php echo esc_attr($this->get_id()); ?>">
-                        <a href="#collapse-<?php echo esc_attr($accorion_content['_id'].$acc_id)?>" class="ekit-accordion--toggler elementskit-btn-link collapsed" data-ekit-toggle="collapse" data-target="#Collapse-<?php echo esc_attr($accorion_content['_id'].$acc_id)?>" aria-expanded="<?php echo esc_attr($is_active == ' collapse' ? 'false' : 'true');  ?>" aria-controls="Collapse-<?php echo esc_attr($accorion_content['_id'].$acc_id)?>">
+                    <div class="elementskit-card-header" id="primaryHeading-<?php echo esc_attr($i); ?>-<?php echo esc_attr($this->get_id()); ?>" role="heading" aria-level="3">
+                        <a href="#collapse-<?php echo esc_attr($accorion_content['_id'].$acc_id)?>" class="ekit-accordion--toggler elementskit-btn-link collapsed" role="button" data-ekit-toggle="collapse" data-target="#Collapse-<?php echo esc_attr($accorion_content['_id'].$acc_id)?>" aria-expanded="<?php echo esc_attr($is_active == ' collapse' ? 'false' : 'true');  ?>" aria-controls="Collapse-<?php echo esc_attr($accorion_content['_id'].$acc_id)?>">
                             <?php if(($ekit_accordion_icon_pos_style == 'left') || ($ekit_accordion_icon_pos_style == 'bothside')) :  ?>
                                 <div class="ekit_accordion_icon_left_group">
                                     <div class="ekit_accordion_normal_icon">
@@ -1033,7 +1037,7 @@ class ElementsKit_Widget_Accordion extends Widget_Base {
                         </a>
                     </div>
 
-                    <div id="Collapse-<?php echo esc_attr($accorion_content['_id'].$acc_id)?>" class="<?php echo esc_attr($is_active); ?>" aria-labelledby="primaryHeading-<?php echo esc_attr($i); ?>-<?php echo esc_attr($this->get_id()); ?>" data-parent="#accordion-<?php echo esc_attr($acc_id); ?>">
+                    <div id="Collapse-<?php echo esc_attr($accorion_content['_id'].$acc_id)?>" class="<?php echo esc_attr($is_active); ?>" role="region" aria-labelledby="primaryHeading-<?php echo esc_attr($i); ?>-<?php echo esc_attr($this->get_id()); ?>" data-parent="#accordion-<?php echo esc_attr($acc_id); ?>">
 
                         <div class="elementskit-card-body ekit-accordion--content">
                             <?php echo do_shortcode( \ElementsKit_Lite\Utils::kses( $accorion_content['acc_content'] ) ); ?>

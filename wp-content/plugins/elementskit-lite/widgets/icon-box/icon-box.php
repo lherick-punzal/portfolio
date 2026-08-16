@@ -36,6 +36,10 @@ class ElementsKit_Widget_Icon_Box extends Widget_Base {
         return 'https://wpmet.com/doc/icon-box-4/';
     }
 
+    public function get_style_depends() {
+        return ['ekit-button','ekit-icon-box'];
+    }
+
     protected function is_dynamic_content(): bool {
         return false;
     }
@@ -248,7 +252,7 @@ class ElementsKit_Widget_Icon_Box extends Widget_Base {
                 ]
             ]
         );
-        
+
         $this->add_control(
             'ekit_icon_box_icons__switch',
             [
@@ -628,7 +632,7 @@ class ElementsKit_Widget_Icon_Box extends Widget_Base {
 					'color'  => [
 						'default' => '#f5f5f5',
                     ]
-                ]    
+                ]
             ]
         );
         $this->add_responsive_control(
@@ -691,7 +695,7 @@ class ElementsKit_Widget_Icon_Box extends Widget_Base {
             [
                 'name' => 'ekit_icon_box_icon_box_border_hv_group',
                 'label' => esc_html__( 'Border', 'elementskit-lite' ),
-                'selector' => '{{WRAPPER}} .elementskit-infobox:hover',   
+                'selector' => '{{WRAPPER}} .elementskit-infobox:hover',
             ]
         );
         $this->add_responsive_control(
@@ -1373,7 +1377,7 @@ class ElementsKit_Widget_Icon_Box extends Widget_Base {
                 ],
             ]
         );
-        
+
         $this->start_controls_tabs( 'tabs_button_style' );
 
         $this->start_controls_tab(

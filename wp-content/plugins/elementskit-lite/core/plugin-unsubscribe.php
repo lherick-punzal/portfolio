@@ -258,7 +258,7 @@ class Plugin_Unsubscribe {
 				<input
 					type="radio"
 					name="reason"
-					value="<?php echo $value; ?>"
+					value="<?php echo esc_attr( $value ); ?>"
 					class="form-control-radio"
 				>
 				<span><?php echo esc_html( $reason['value'] ); ?></span>
@@ -268,8 +268,8 @@ class Plugin_Unsubscribe {
 			<?php if ( !$show_textarea ) : ?>
 				<textarea
 					class="radio-feedback"
-					name="feedback_<?php echo $value; ?>"
-					placeholder="<?php echo $placeholder; ?>"
+					name="feedback_<?php echo esc_attr( $value ); ?>"
+					placeholder="<?php echo esc_attr( $placeholder ); ?>"
 					rows="2"
 				></textarea>
 				<?php if ( 'plugin_bug' === $reason['key'] ) : ?>
@@ -280,6 +280,15 @@ class Plugin_Unsubscribe {
 					</a>
 				</div>
 				<?php endif; ?>
+
+				<?php if ( 'performance_issue' === $reason['key'] ) : ?>
+				<div class="ekit-help-links">
+					<span class="ekit-help-links-title">💡 <?php esc_html_e( 'Need help before deactivating?', 'elementskit-lite' ); ?></span>
+					<a href="https://wpmet.com/doc/elementskit/speed-optimization" target="_blank" rel="noopener noreferrer">
+						<?php esc_html_e( 'Check our optimization guide', 'elementskit-lite' ); ?>
+					</a>
+				</div>
+			<?php endif; ?>
 			<?php endif; ?>
 		</div>
 		<?php

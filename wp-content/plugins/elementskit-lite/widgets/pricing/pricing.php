@@ -15,6 +15,10 @@ class ElementsKit_Widget_Pricing extends Widget_Base {
 		return ['ekit-info-tip'];
 	}
 
+	public function get_style_depends() {
+		return ['ekit-pricing'];
+	}
+
     public function get_name() {
         return Handler::get_name();
     }
@@ -141,7 +145,7 @@ class ElementsKit_Widget_Pricing extends Widget_Base {
 				'fa4compatibility' => 'ekit_pricing_icon',
                 'default' => [
                     'value' => 'fab fa-amazon',
-                    'library' => 'brands',
+                    'library' => 'fa-brands',
                 ],
                 'condition' => [
 					'ekit_pricing_icon_type' => 'icon',
@@ -282,7 +286,8 @@ class ElementsKit_Widget_Pricing extends Widget_Base {
 				'type' => Controls_Manager::COLOR,
 				'default' => '',
 				'selectors' => [
-					'{{WRAPPER}} .elementskit-single-pricing .elementskit-pricing-lists {{CURRENT_ITEM}} > :is(i, svg)' => 'color: {{VALUE}}; fill: {{VALUE}};',
+					'{{WRAPPER}} .elementskit-single-pricing .elementskit-pricing-lists {{CURRENT_ITEM}} > i' => 'color: {{VALUE}}',
+					'{{WRAPPER}} .elementskit-single-pricing .elementskit-pricing-lists {{CURRENT_ITEM}} > svg' => 'fill: {{VALUE}}',
 				],
             ]
 		);
@@ -327,7 +332,8 @@ class ElementsKit_Widget_Pricing extends Widget_Base {
 				'label' =>esc_html__( 'Info Icon Color', 'elementskit-lite' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} {{CURRENT_ITEM}} .ekit-pricing-list-info :is(i, svg)' => 'color: {{VALUE}}; fill: {{VALUE}};',
+					'{{WRAPPER}} {{CURRENT_ITEM}} .ekit-pricing-list-info i' => 'color: {{VALUE}}',
+					'{{WRAPPER}} {{CURRENT_ITEM}} .ekit-pricing-list-info svg' => 'fill: {{VALUE}}',
 				],
 				'condition' => [
 					'ekit_pricing_list_info!' => '',
@@ -1156,7 +1162,7 @@ class ElementsKit_Widget_Pricing extends Widget_Base {
                 'default' => '',
                 'selectors' => [
 					'{{WRAPPER}} .elementskit-single-pricing .elementkit-pricing-icon' => 'color: {{VALUE}};',
-					'{{WRAPPER}} .elementskit-pricing-header svg path'	=> 'stroke: {{VALUE}}; fill: {{VALUE}};',
+					'{{WRAPPER}} .elementskit-pricing-header svg' => 'fill: {{VALUE}};',
                 ],
             ]
         );
@@ -1211,7 +1217,7 @@ class ElementsKit_Widget_Pricing extends Widget_Base {
                 'default' => '',
                 'selectors' => [
 					'{{WRAPPER}}:hover .elementkit-pricing-icon' => 'color: {{VALUE}};',
-					'{{WRAPPER}}:hover .elementskit-pricing-header svg path' => 'stroke: {{VALUE}}; fill: {{VALUE}};',
+					'{{WRAPPER}}:hover .elementskit-pricing-header svg' => 'fill: {{VALUE}};',
                 ],
             ]
         );
@@ -2215,7 +2221,7 @@ class ElementsKit_Widget_Pricing extends Widget_Base {
                 'type' => Controls_Manager::COLOR,
                 'selectors' => [
 					'{{WRAPPER}} .elementskit-single-pricing a.elementskit-pricing-btn' => 'color: {{VALUE}};',
-					'{{WRAPPER}} .elementskit-single-pricing a.elementskit-pricing-btn svg path'	=> 'stroke: {{VALUE}}; fill: {{VALUE}};',
+					'{{WRAPPER}} .elementskit-single-pricing a.elementskit-pricing-btn svg ' => 'fill: {{VALUE}};',
                 ],
             ]
         );
@@ -2318,7 +2324,7 @@ class ElementsKit_Widget_Pricing extends Widget_Base {
                 'type' => Controls_Manager::COLOR,
                 'selectors' => [
 					'{{WRAPPER}} .elementskit-single-pricing a.elementskit-pricing-btn:hover' => 'color: {{VALUE}};',
-					'{{WRAPPER}} .elementskit-single-pricing a.elementskit-pricing-btn:hover svg path'	=> 'stroke: {{VALUE}}; fill: {{VALUE}};',
+					'{{WRAPPER}} .elementskit-single-pricing a.elementskit-pricing-btn:hover svg' => 'fill: {{VALUE}};',
                 ],
             ]
         );

@@ -59,6 +59,10 @@ class Plugin {
 		// Register default modules
 		Core\Build_Modules::instance();
 
+		// Register ElementsKit MCP support (shared service, WP Abilities,
+		// MCP server, REST proxy and the Angie editor tools).
+		Mcp\Manager::instance();
+
 		// register plugin activation actions
 		( new Core\Activation_Actions() )->init();
 
@@ -383,7 +387,10 @@ class Plugin {
 			return;
 		}
 
-		wp_register_style( 'fontawesome', \ElementsKit_Lite::widget_url() . 'init/assets/css/font-awesome.min.css', false, \ElementsKit_Lite::version() );
+		// Use the Font Awesome bundled with Elementor instead of shipping our own copy.
+		if ( defined( 'ELEMENTOR_ASSETS_URL' ) ) {
+			wp_register_style( 'fontawesome', ELEMENTOR_ASSETS_URL . 'lib/font-awesome/css/all.min.css', false, ELEMENTOR_VERSION );
+		}
 		wp_register_style( 'elementskit-font-css-admin', \ElementsKit_Lite::module_url() . 'elementskit-icon-pack/assets/css/ekiticons.css', false, \ElementsKit_Lite::version() );
 		wp_register_style( 'elementskit-init-css-admin', \ElementsKit_Lite::lib_url() . 'framework/assets/css/admin-style.css', false, \ElementsKit_Lite::version() );
 
@@ -403,6 +410,14 @@ class Plugin {
 			'ekit_ajax_var',
 			array(
 				'nonce' => wp_create_nonce( 'ajax-nonce' ),
+			)
+		);
+
+		wp_localize_script(
+			'ekit-admin-core',
+			'ekit_admin_i18n',
+			array(
+				'disabled' => esc_html__( 'Disabled', 'elementskit-lite' ),
 			)
 		);
 	}

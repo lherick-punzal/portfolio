@@ -35,6 +35,11 @@ class ElementsKit_Widget_Business_Hours extends Widget_Base {
     public function get_help_url() {
         return 'https://wpmet.com/doc/business-hours/';
     }
+
+    public function get_style_depends() {
+        return ['ekit-business-hours'];
+    }
+
     protected function is_dynamic_content(): bool {
         return false;
     }

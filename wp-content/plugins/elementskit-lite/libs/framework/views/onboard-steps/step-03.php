@@ -16,11 +16,10 @@
 		$metform = $pluginStatus->get_status( 'metform/metform.php' );
 		$emailkit = $pluginStatus->get_status( 'emailkit/EmailKit.php' );
 		$popupkit = $pluginStatus->get_status( 'popup-builder-block/popup-builder-block.php' );
-		$review = $pluginStatus->get_status( 'table-builder-block/table-builder-block.php' );
-		$social = $pluginStatus->get_status( 'wp-social/wp-social.php' );
+		// $social = $pluginStatus->get_status( 'wp-social/wp-social.php' );
 
 		$gutenkit = $pluginStatus->get_status( 'gutenkit-blocks-addon/gutenkit-blocks-addon.php' );
-		$tablekit = $pluginStatus->get_status( 'table-builder-block/table-builder-block.php' );
+		// $tablekit = $pluginStatus->get_status( 'table-builder-block/table-builder-block.php' );
 
 		$woocommerce = $pluginStatus->get_status( 'woocommerce/woocommerce.php' );
 		$shopengine_pre_check = $woocommerce['status'] == 'activated' ? '' : '';

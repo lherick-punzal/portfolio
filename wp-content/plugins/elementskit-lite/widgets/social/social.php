@@ -34,6 +34,11 @@ class ElementsKit_Widget_Social extends Widget_Base {
     public function get_help_url() {
         return 'https://wpmet.com/doc/social-media-widget/';
     }
+
+	public function get_style_depends() {
+		return ['ekit-social'];
+	}
+
     protected function is_dynamic_content(): bool {
         return false;
     }
@@ -225,7 +230,8 @@ class ElementsKit_Widget_Social extends Widget_Base {
 				'type' => Controls_Manager::COLOR,
 				'default' => '#222222',
 				'selectors' => [
-					'{{WRAPPER}} {{CURRENT_ITEM}} > a :is(i, svg)' => 'color: {{VALUE}}; fill: {{VALUE}};',
+					'{{WRAPPER}} {{CURRENT_ITEM}} > a i' => 'color: {{VALUE}}',
+					'{{WRAPPER}} {{CURRENT_ITEM}} > a svg' => 'fill: {{VALUE}}',
 				],
 			]
 		);
@@ -286,7 +292,7 @@ class ElementsKit_Widget_Social extends Widget_Base {
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} {{CURRENT_ITEM}} > a:hover' => 'color: {{VALUE}};',
-					'{{WRAPPER}} {{CURRENT_ITEM}} > a:hover svg path'	=> 'stroke: {{VALUE}}; fill: {{VALUE}};',
+					'{{WRAPPER}} {{CURRENT_ITEM}} > a:hover svg'	=> 'fill: {{VALUE}};',
 				],
 			]
 		);

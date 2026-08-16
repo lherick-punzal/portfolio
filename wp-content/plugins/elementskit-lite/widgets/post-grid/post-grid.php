@@ -34,6 +34,11 @@ class ElementsKit_Widget_Post_Grid extends Widget_Base {
     public function get_help_url() {
         return 'https://wpmet.com/doc/post-grid/';
     }
+
+	public function get_style_depends() {
+		return ['ekit-post-tab' , 'ekit-post-grid'];
+	}
+
     protected function is_dynamic_content(): bool {
         return false;
     }
@@ -141,7 +146,7 @@ class ElementsKit_Widget_Post_Grid extends Widget_Base {
 				],
 			]
         );
-        
+
         $this->add_control(
 			'bottom_space',
 			[
@@ -163,7 +168,7 @@ class ElementsKit_Widget_Post_Grid extends Widget_Base {
 
         $this->end_controls_section();
 
-        
+
 		$this->start_controls_section(
 			'title_style',
 			[
@@ -242,7 +247,7 @@ class ElementsKit_Widget_Post_Grid extends Widget_Base {
 
         $tablet_responsive_class = isset($settings['count_col_tablet']) ? $settings['count_col_tablet'] :  'ekit___column-2';
     	$mobile_responsive_class = isset($settings['count_col_mobile']) ? $settings['count_col_mobile'] :  'ekit___column-2';
-    
+
     	$this->add_render_attribute(
     		[
     			'ekit-single-item' => [
@@ -266,9 +271,17 @@ class ElementsKit_Widget_Post_Grid extends Widget_Base {
                     <?php $xs_query->the_post(); ?>
                     <?php if(has_post_thumbnail()): ?>
                         <div <?php echo $this->get_render_attribute_string('ekit-single-item'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Already escaped by elementor ?>>
-                            <a href="<?php echo esc_url(get_the_permalink()); ?>" class="tab__post--header" aria-label="url">
-                                <?php $img_url = get_the_post_thumbnail_url(get_the_ID(), 'medium'); ?>
-                                <div class="post_grid_img_thumb" style="background-image: url('<?php echo esc_url($img_url); ?>')"></div>
+                            <a href="<?php echo esc_url(get_the_permalink()); ?>" class="tab__post--header" aria-label="<?php echo esc_attr( get_the_title() ); ?>">
+                                <?php
+                                echo get_the_post_thumbnail(
+                                    get_the_ID(),
+                                    'medium',
+                                    [
+                                        'class' => 'post_grid_img_thumb',
+                                        'style' => 'display: block; width: 100%; object-fit: cover;',
+                                    ]
+                                ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Generated and escaped by WordPress.
+                                ?>
                                 <?php if(get_post_format()  == 'video') : ?>
                                     <div class="tab__post--icon">
                                         <span class="fa fa-play-circle-o"></span>
@@ -278,11 +291,11 @@ class ElementsKit_Widget_Post_Grid extends Widget_Base {
                             <h3 class="tab__post--title ekit-post_grid-title"><a href="<?php echo esc_url(get_the_permalink()); ?>"><?php the_title(); ?></a></h3>
                         </div>
                     <?php endif; ?>
-                    
+
                 <?php endwhile;
             endif;
             wp_reset_postdata(); ?>
         </div>
-    <?php 
+    <?php
     }
 }

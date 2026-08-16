@@ -15,10 +15,14 @@ class ElementsKit_Widget_Team extends Widget_Base {
     public function __construct( $data = [], $args = null ) {
 		parent::__construct( $data, $args );
 	}
+    public function get_style_depends() {
+        return ['magnific-popup', 'ekit-team'];
+    }
 
 	public function get_script_depends() {
 		return ['ekit-team', 'magnific-popup'];
 	}
+
 
     public function get_name() {
         return Handler::get_name();
@@ -1257,7 +1261,7 @@ class ElementsKit_Widget_Team extends Widget_Base {
                         'default' => '',
                         'selectors' => [
                             '{{WRAPPER}} .profile-icon > i:hover' => 'color: {{VALUE}};',
-                            '{{WRAPPER}} .profile-icon > svg:hover path'    => 'stroke: {{VALUE}}; fill: {{VALUE}};',
+                            '{{WRAPPER}} .profile-icon > svg:hover'    => 'fill: {{VALUE}};',
                         ],
                     ]
                 );
@@ -2089,9 +2093,9 @@ class ElementsKit_Widget_Team extends Widget_Base {
                 'default' => '#656565',
                 'selectors' => [
                     '{{WRAPPER}} .ekit-team-modal-close' => 'color: {{VALUE}};',
-                    '{{WRAPPER}} .ekit-team-modal-close svg path' => 'stroke: {{VALUE}}; fill: {{VALUE}};',
+                    '{{WRAPPER}} .ekit-team-modal-close svg' => 'fill: {{VALUE}};',
 					$popup_selector . ' .ekit-team-modal-close' => 'color: {{VALUE}};',
-                    $popup_selector . ' .ekit-team-modal-close svg path' => 'stroke: {{VALUE}}; fill: {{VALUE}};',
+                    $popup_selector . ' .ekit-team-modal-close svg' => 'fill: {{VALUE}};',
                 ],
             ]
         );
@@ -2156,9 +2160,9 @@ class ElementsKit_Widget_Team extends Widget_Base {
                 'default' => '',
                 'selectors' => [
                     '{{WRAPPER}} .ekit-team-modal-close:hover' => 'color: {{VALUE}};',
-                    '{{WRAPPER}} .ekit-team-modal-close:hover svg path' => 'stroke: {{VALUE}}; fill: {{VALUE}};',
+                    '{{WRAPPER}} .ekit-team-modal-close:hover svg' => 'fill: {{VALUE}};',
                     $popup_selector . ' .ekit-team-modal-close:hover' => 'color: {{VALUE}};',
-                    $popup_selector . ' .ekit-team-modal-close:hover svg path' => 'stroke: {{VALUE}}; fill: {{VALUE}};',
+                    $popup_selector . ' .ekit-team-modal-close:hover svg' => 'fill: {{VALUE}};',
                 ],
             ]
         );
@@ -2392,7 +2396,7 @@ class ElementsKit_Widget_Team extends Widget_Base {
 
 		<div <?php echo $this->get_render_attribute_string('profile_card'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Already escaped by elementor ?>>
 			<?php if ($settings['ekit_team_chose_popup'] == 'yes') : ?>
-				<a aria-label="profile" href="javascript:void(0)" data-mfp-src="#ekit_team_modal_<?php echo esc_attr($this->get_id() . '_' . get_the_ID()); ?>" class="ekit-team-popup">
+				<a aria-label="<?php echo esc_attr( sprintf( __( 'View %s profile', 'elementskit-lite' ), $ekit_team_name ) ); ?>" href="javascript:void(0)" data-mfp-src="#ekit_team_modal_<?php echo esc_attr($this->get_id() . '_' . get_the_ID()); ?>" class="ekit-team-popup">
 			<?php endif; ?>
 
 				<div class="profile-header ekit-team-img <?php echo esc_attr($ekit_team_style == 'default' ? 'ekit-img-overlay ekit-team-img-block' : ''); ?>" <?php if ( (isset($settings['ekit_team_chose_popup']) ? $ekit_team_chose_popup : 'no')  == 'yes') :?> data-toggle="modal" data-target="ekit_team_modal_#<?php echo esc_attr($this->get_id() . '_' . get_the_ID()); ?>" <?php endif; ?>>
@@ -2426,7 +2430,7 @@ class ElementsKit_Widget_Team extends Widget_Base {
 
 					<h2 class="profile-title">
 					<?php if ($settings['ekit_team_chose_popup'] == 'yes') : ?>
-						<a aria-label="profile" href="javascript:void(0)" data-mfp-src="#ekit_team_modal_<?php echo esc_attr($this->get_id() . '_' . get_the_ID()); ?>" class="ekit-team-popup">
+						<a aria-label="<?php echo esc_attr( sprintf( __( 'View %s profile', 'elementskit-lite' ), $ekit_team_name ) ); ?>" href="javascript:void(0)" data-mfp-src="#ekit_team_modal_<?php echo esc_attr($this->get_id() . '_' . get_the_ID()); ?>" class="ekit-team-popup">
 						<?php echo esc_html( $ekit_team_name ); ?>
 						</a>
 						<?php else: ?>
@@ -2470,7 +2474,7 @@ class ElementsKit_Widget_Team extends Widget_Base {
 							<div class="profile-body">
 								<h2 class="profile-title">
 								<?php if ($settings['ekit_team_chose_popup'] == 'yes') : ?>
-									<a aria-label="profile" href="javascript:void(0)" data-mfp-src="#ekit_team_modal_<?php echo esc_attr($this->get_id() . '_' . get_the_ID()); ?>" class="ekit-team-popup">
+									<a aria-label="<?php echo esc_attr( sprintf( __( 'View %s profile', 'elementskit-lite' ), $ekit_team_name ) ); ?>" href="javascript:void(0)" data-mfp-src="#ekit_team_modal_<?php echo esc_attr($this->get_id() . '_' . get_the_ID()); ?>" class="ekit-team-popup">
 									<?php echo esc_html( $ekit_team_name ); ?>
 									</a>
 									<?php else: ?>
@@ -2506,7 +2510,7 @@ class ElementsKit_Widget_Team extends Widget_Base {
 						<div class="profile-body">
 							<h2 class="profile-title">
 							<?php if ($settings['ekit_team_chose_popup'] == 'yes') : ?>
-								<a aria-label="profile" href="javascript:void(0)" data-mfp-src="#ekit_team_modal_<?php echo esc_attr($this->get_id() . '_' . get_the_ID()); ?>" class="ekit-team-popup">
+								<a aria-label="<?php echo esc_attr( sprintf( __( 'View %s profile', 'elementskit-lite' ), $ekit_team_name ) ); ?>" href="javascript:void(0)" data-mfp-src="#ekit_team_modal_<?php echo esc_attr($this->get_id() . '_' . get_the_ID()); ?>" class="ekit-team-popup">
 								<?php echo esc_html( $ekit_team_name ); ?>
 								</a>
 								<?php else: ?>

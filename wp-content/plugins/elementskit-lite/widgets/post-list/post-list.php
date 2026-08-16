@@ -66,7 +66,7 @@ class ElementsKit_Widget_Post_List extends Widget_Base {
 
             ]
 		);
-		
+
 		$this->add_control(
 			'section_recent_post_limit',
 			[
@@ -181,7 +181,7 @@ class ElementsKit_Widget_Post_List extends Widget_Base {
 				'condition' => ['view' => 'inline'],
             ]
 		);
-		
+
 		$this->add_responsive_control(
             'grid_gap',
             [
@@ -218,7 +218,7 @@ class ElementsKit_Widget_Post_List extends Widget_Base {
 				'default' => 'no',
 			]
 		);
-       
+
 
         /**
         * Control: Featured Image Size
@@ -307,7 +307,7 @@ class ElementsKit_Widget_Post_List extends Widget_Base {
 				'default' => 'no',
 			]
 		);
-		
+
 		$this->add_control(
 			'show_date_meta',
 			[
@@ -339,7 +339,7 @@ class ElementsKit_Widget_Post_List extends Widget_Base {
 				]
 			]
 		);
-		
+
 		$this->add_control(
 			'show_category_meta',
 			[
@@ -439,7 +439,7 @@ class ElementsKit_Widget_Post_List extends Widget_Base {
                 ],
             ]
 		);
-		
+
 		$this->start_controls_tabs( 'tabs_list_style' );
 
         $this->start_controls_tab(
@@ -570,7 +570,7 @@ class ElementsKit_Widget_Post_List extends Widget_Base {
 				'prefix_class' => 'elementor%s-align-',
 			]
 		);
-		
+
 		$this->add_control(
             'overlay_heading',
             [
@@ -631,8 +631,8 @@ class ElementsKit_Widget_Post_List extends Widget_Base {
         );
 		$this->end_controls_tab();
 		$this->end_controls_tabs();
-		
-		
+
+
 
 		$this->add_control(
 			'divider',
@@ -802,7 +802,7 @@ class ElementsKit_Widget_Post_List extends Widget_Base {
                 'selector' => '{{WRAPPER}} .ekit-wid-con .elementor-icon-list-icon',
             ]
 		);
-		
+
 		$this->add_responsive_control(
             'icon_height',
             [
@@ -857,7 +857,7 @@ class ElementsKit_Widget_Post_List extends Widget_Base {
 
             ]
 		);
-		
+
 		$this->add_responsive_control(
             'icon_border_radius',
             [
@@ -884,7 +884,7 @@ class ElementsKit_Widget_Post_List extends Widget_Base {
 				'default' => '',
 				'selectors' => [
 					'{{WRAPPER}} .elementor-icon-list-icon i' => 'color: {{VALUE}};',
-					'{{WRAPPER}} .elementor-icon-list-icon svg path'	=> 'stroke: {{VALUE}}; fill: {{VALUE}};',
+					'{{WRAPPER}} .elementor-icon-list-icon svg'	=> 'fill: {{VALUE}};',
 				],
 			]
 		);
@@ -897,7 +897,7 @@ class ElementsKit_Widget_Post_List extends Widget_Base {
 				'default' => '',
 				'selectors' => [
 					'{{WRAPPER}} .elementor-icon-list-item:hover .elementor-icon-list-icon i' => 'color: {{VALUE}};',
-					'{{WRAPPER}} .elementor-icon-list-item:hover .elementor-icon-list-icon svg path'	=> 'stroke: {{VALUE}}; fill: {{VALUE}};',
+					'{{WRAPPER}} .elementor-icon-list-item:hover .elementor-icon-list-icon svg'	=> 'fill: {{VALUE}};',
 				],
 			]
 		);
@@ -1033,7 +1033,7 @@ class ElementsKit_Widget_Post_List extends Widget_Base {
                 ],
             ]
         );
-		
+
 		$this->end_controls_section();
 
 		$this->start_controls_section(
@@ -1079,7 +1079,7 @@ class ElementsKit_Widget_Post_List extends Widget_Base {
                 ],
             ]
 		);
-		
+
 		$this->add_responsive_control(
 			'meta_icon_spacing',
 			[
@@ -1152,7 +1152,7 @@ class ElementsKit_Widget_Post_List extends Widget_Base {
 				'default' => '#7f8595',
 				'selectors' => [
 					'{{WRAPPER}} .elementor-icon-list-item .meta-lists > span' => 'color: {{VALUE}};',
-					'{{WRAPPER}} .elementor-icon-list-item .meta-lists svg path'	=> 'stroke: {{VALUE}}; fill: {{VALUE}};'
+					'{{WRAPPER}} .elementor-icon-list-item .meta-lists svg ' => 'fill: {{VALUE}};'
 				],
 			]
 		);
@@ -1196,7 +1196,7 @@ class ElementsKit_Widget_Post_List extends Widget_Base {
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .elementor-icon-list-item .meta-lists > span:hover' => 'color: {{VALUE}}',
-					'{{WRAPPER}} .elementor-icon-list-item .meta-lists > span:hover svg path'	=> 'stroke: {{VALUE}}; fill: {{VALUE}};'
+					'{{WRAPPER}} .elementor-icon-list-item .meta-lists > span:hover svg' => 'fill: {{VALUE}};'
 				],
 			]
 		);
@@ -1237,7 +1237,7 @@ class ElementsKit_Widget_Post_List extends Widget_Base {
             $this->render_raw();
         echo '</div>';
 	}
-	
+
 	private function post_list($post, $item = null) {
 		$settings = $this->get_settings_for_display();
 		$categories = get_the_category($post->ID);
@@ -1252,7 +1252,7 @@ class ElementsKit_Widget_Post_List extends Widget_Base {
 		?>
 			<li class="elementor-icon-list-item <?php echo esc_attr($grid_d); ?> <?php echo esc_attr($grid_t); ?> <?php echo esc_attr($grid_m); ?>">
 				<a href="<?php echo esc_url(get_the_permalink($post->ID)); ?>" <?php if(isset($settings['show_bg_feature_image']) && $settings['show_bg_feature_image'] == 'yes' && !empty($feature_bg_url)) : ?>style="background-image: url('<?php echo esc_attr( $feature_bg_url ); ?>')" <?php endif; ?>>
-					<?php 
+					<?php
 						if ($settings['show_feature_image'] == 'yes') {
 							echo get_the_post_thumbnail($post->ID, $settings['show_feature_img_size_size']);
 						} else {
@@ -1277,7 +1277,7 @@ class ElementsKit_Widget_Post_List extends Widget_Base {
 						}
 					?>
 					<div class="ekit_post_list_content_wraper">
-						<?php if ($settings['show_post_meta'] == 'yes') { 
+						<?php if ($settings['show_post_meta'] == 'yes') {
 							if ($settings['post_meta_position'] == 'top_position') {
 						?>
 						<?php if ($settings['show_date_meta'] == 'yes' || $settings['show_category_meta'] == 'yes') { ?>
@@ -1304,7 +1304,7 @@ class ElementsKit_Widget_Post_List extends Widget_Base {
 							</span>
 							<?php }; ?>
 
-							<?php 
+							<?php
 								if ($settings['show_category_meta'] == 'yes') {
 									$counter = 0;
 									?>
@@ -1334,15 +1334,15 @@ class ElementsKit_Widget_Post_List extends Widget_Base {
 								}
 							?>
 						</div>
-						<?php 
+						<?php
 						};
-							}; 
+							};
 						};
 						?>
 
 						<span class="elementor-icon-list-text"><?php echo esc_html($text); ?></span>
 
-						<?php if ($settings['show_post_meta'] == 'yes') { 
+						<?php if ($settings['show_post_meta'] == 'yes') {
 							if ($settings['post_meta_position'] == 'bottom_position') {
 						?>
 						<?php if ($settings['show_date_meta'] == 'yes' || $settings['show_category_meta'] == 'yes') { ?>
@@ -1362,13 +1362,13 @@ class ElementsKit_Widget_Post_List extends Widget_Base {
 										<i class="<?php echo esc_attr($settings['date_meta__icon']); ?>" aria-hidden="true"></i>
 										<?php
 									}
-								?>	
+								?>
 
 								<?php echo get_the_date("d M Y", $post->ID); ?>
 							</span>
 							<?php }; ?>
 
-							<?php 
+							<?php
 								if ($settings['show_category_meta'] == 'yes') {
 									$counter = 0;
 									?>
@@ -1395,9 +1395,9 @@ class ElementsKit_Widget_Post_List extends Widget_Base {
 								}
 							?>
 						</div>
-						<?php 
+						<?php
 						};
-							}; 
+							};
 						};
 						?>
 					</div>
@@ -1420,7 +1420,7 @@ class ElementsKit_Widget_Post_List extends Widget_Base {
 			$this->add_render_attribute( 'list_item', 'class', 'elementor-inline-item' );
 		}
 
-		
+
 		?>
 		<ul <?php echo $this->get_render_attribute_string( 'icon_list' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Already escaped by elementor ?>>
 			<?php
@@ -1440,11 +1440,11 @@ class ElementsKit_Widget_Post_List extends Widget_Base {
 			}
 
 			$posts = get_posts($post_args);
-			
+
 			if(in_array($settings['section_layout_options'], ['recent', 'popular', 'category'])) {
 				if( is_countable($posts) && count($posts) > 0){
 					foreach($posts as $post){
-						echo $this->post_list($post); // phpcs:ignore WordPress.Security.EscapeOutput -- Buffering output line number 1383 
+						echo $this->post_list($post); // phpcs:ignore WordPress.Security.EscapeOutput -- Buffering output line number 1383
 					}
 				}else {
 					esc_html_e('Opps, No posts were found.', 'elementskit-lite');

@@ -40,11 +40,11 @@ class ElementsKit_Widget_Testimonial extends Widget_Base {
     }
 
 	public function get_style_depends() {
-		return ['swiper'];
+		return ['ekit-testimonial', 'swiper'];
 	}
 
 	public function get_script_depends() {
-		return ['ekit-testimonial'];
+		return ['ekit-testimonial', 'swiper'];
 	}
 
     protected function is_dynamic_content(): bool {
@@ -1247,7 +1247,7 @@ class ElementsKit_Widget_Testimonial extends Widget_Base {
 				    '{{WRAPPER}} .elementskit-testimonial-slider-block-style .elementskit-commentor-content > i' => 'color: {{VALUE}};',
 				    '{{WRAPPER}} .elementskit-testimonial-slider-block-style-two .elementskit-icon-content > i' => 'color: {{VALUE}};',
 					'{{WRAPPER}} .elementskit-testimonial-slider-block-style-three .elementskit-icon-content > i' => 'color: {{VALUE}};',
-					'{{WRAPPER}} .elementskit-watermark-icon svg path'	=> 'stroke: {{VALUE}}; fill: {{VALUE}};'
+					'{{WRAPPER}} .elementskit-watermark-icon svg'	=> 'fill: {{VALUE}};'
 			    ],
 		    ]
 	    );
@@ -1284,9 +1284,9 @@ class ElementsKit_Widget_Testimonial extends Widget_Base {
                     '{{WRAPPER}} .elementskit-testimonial-slider-block-style:hover .elementskit-commentor-content > i' => 'color: {{VALUE}};',
                     '{{WRAPPER}} .elementskit-testimonial-slider-block-style-two:hover .elementskit-icon-content > i' => 'color: {{VALUE}};',
 					'{{WRAPPER}} .elementskit-testimonial-slider-block-style-three:hover .elementskit-icon-content > i' => 'color: {{VALUE}};',
-					'{{WRAPPER}} .elementskit-single-testimonial-slider:hover .elementskit-watermark-icon svg path'	=> 'stroke: {{VALUE}}; fill: {{VALUE}};',
+					'{{WRAPPER}} .elementskit-single-testimonial-slider:hover .elementskit-watermark-icon svg'	=> 'fill: {{VALUE}};',
                     '{{WRAPPER}} .elementskit-single-testimonial-slider.testimonial-active:hover .elementskit-watermark-icon > i' => 'color: {{VALUE}};',
-					'{{WRAPPER}} .elementskit-single-testimonial-slider.testimonial-active:hover .elementskit-watermark-icon svg path'	=> 'stroke: {{VALUE}}; fill: {{VALUE}};',
+					'{{WRAPPER}} .elementskit-single-testimonial-slider.testimonial-active:hover .elementskit-watermark-icon svg' => 'fill: {{VALUE}};',
 
 
                 ],
@@ -1325,7 +1325,7 @@ class ElementsKit_Widget_Testimonial extends Widget_Base {
                 'type'       => Controls_Manager::COLOR,
                 'selectors'  => [
                     '{{WRAPPER}} .elementskit-single-testimonial-slider.testimonial-active .elementskit-watermark-icon > i' => 'color: {{VALUE}};',
-					'{{WRAPPER}} .elementskit-single-testimonial-slider.testimonial-active .elementskit-watermark-icon svg path'	=> 'stroke: {{VALUE}}; fill: {{VALUE}};',
+					'{{WRAPPER}} .elementskit-single-testimonial-slider.testimonial-active .elementskit-watermark-icon svg ' => 'fill: {{VALUE}};',
                 ],
             ]
         );

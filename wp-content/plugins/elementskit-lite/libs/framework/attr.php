@@ -75,7 +75,7 @@ class Attr {
 		}
 
 		$plugin_name = '<strong>' . esc_html__( 'ElementsKit', 'elementskit-lite' ) . '</strong>';
-		$review_url  = esc_url( 'https://wordpress.org/support/plugin/elementskit-lite/reviews/?filter=5');
+		$review_url  = esc_url( 'https://wordpress.org/support/plugin/elementskit-lite/reviews/');
 
 		$text = sprintf(
 			'<span class="elementskit-footer-text"><i>%1$s</i></span>',

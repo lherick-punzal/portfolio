@@ -39,6 +39,10 @@ class ElementsKit_Widget_Back_To_Top extends Widget_Base {
 		return ['ekit-back-to-top', 'animate-circle'];
 	}
 
+	public function get_style_depends() {
+		return ['ekit-back-to-top'];
+	}
+
     protected function is_dynamic_content(): bool {
         return false;
     }
@@ -472,7 +476,7 @@ class ElementsKit_Widget_Back_To_Top extends Widget_Base {
 		];
 		?>
 			<div class="ekit-back-to-top-container ekit-btt <?php echo esc_attr( $appearance ) ?>" data-settings="<?php echo esc_attr( wp_json_encode($args) ) ?>"> 
-				<span class="ekit-btt__button <?php echo esc_attr( $is_scroll ) ?>">
+				<button type="button" class="ekit-btt__button <?php echo esc_attr( $is_scroll ) ?>"<?php if ( 'text_only' !== $appearance ) : ?> aria-label="<?php echo esc_attr__( 'Back to top', 'elementskit-lite' ); ?>"<?php endif; ?>>
 					<?php // start container
 					switch( $appearance ) {
 						// show icon style by default 
@@ -493,7 +497,7 @@ class ElementsKit_Widget_Back_To_Top extends Widget_Base {
 							</div>
 							<?php break;
 					} ?>
-				</span>
+				</button>
 			</div>
 		<?php // end container
 	}

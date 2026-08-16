@@ -36,6 +36,10 @@ class ElementsKit_Widget_Header_Info extends Widget_Base
         return 'https://wpmet.com/doc/header-info/';
     }
 
+    public function get_style_depends() {
+        return ['ekit-header-info'];
+    }
+
     protected function is_dynamic_content(): bool {
         return false;
     }
@@ -197,7 +201,7 @@ class ElementsKit_Widget_Header_Info extends Widget_Base
                 'default' => '',
                 'selectors' => [
                     '{{WRAPPER}} .ekit-header-info > li > a i' => 'color: {{VALUE}};',
-                    '{{WRAPPER}} .ekit-header-info > li > a svg path'   => 'stroke: {{VALUE}}; fill: {{VALUE}};',
+                    '{{WRAPPER}} .ekit-header-info > li > a svg'   => 'fill: {{VALUE}};',
                 ],
             ]
         );

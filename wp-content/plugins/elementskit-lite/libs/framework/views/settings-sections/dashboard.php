@@ -14,7 +14,7 @@
 		</div> 
 		<p><?php esc_html_e( 'Get started by spending some time with the documentation to get familiar with ElementsKit. Build awesome websites for you or your clients with ease.', 'elementskit-lite' ); ?></p>
 		<div class="ekit-admin-right-content--button">
-			<a target="_blank" href="https://wpmet.com/doc/elementskit/" class="attr-btn attr-btn-primary ekit-admin-right-content--link"><i class="fa fa-newspaper-o"></i><?php esc_html_e( 'Get started', 'elementskit-lite' ); ?></a>
+			<a target="_blank" href="https://wpmet.com/doc/elementskit/" class="attr-btn attr-btn-primary ekit-admin-right-content--link"><i class="far fa-newspaper"></i><?php esc_html_e( 'Get started', 'elementskit-lite' ); ?></a>
 		</div>
 	</div>
 </div>
@@ -58,13 +58,13 @@
 	<div class="ekti-admin-video-tutorial-popup">
 		<div class="ekti-admin-video-tutorial-popup-content">
 			<div class="ekti-admin-video-tutorial-iframe"></div>
-			<div class="ekti-admin-video-tutorial-close"><i class="fa fa-times"></i></div>
+			<div class="ekti-admin-video-tutorial-close"><i class="fas fa-times"></i></div>
 		</div>
 	</div>
 
 	
 	<div class="ekit-admin-right-content--button attr-text-center">
-		<a target="_blank" href="https://www.youtube.com/watch?v=ps7knxZpDFI&list=PL3t2OjZ6gY8MVnyA4OLB6qXb77-roJOuY" class="attr-btn attr-btn-primary ekit-admin-right-content--link"><i class="fa fa-check-circle"></i><?php esc_html_e( 'watch more videos', 'elementskit-lite' ); ?></a>
+		<a target="_blank" href="https://www.youtube.com/watch?v=ps7knxZpDFI&list=PL3t2OjZ6gY8MVnyA4OLB6qXb77-roJOuY" class="attr-btn attr-btn-primary ekit-admin-right-content--link"><i class="fas fa-check-circle"></i><?php esc_html_e( 'watch more videos', 'elementskit-lite' ); ?></a>
 	</div>
 </div>
 
@@ -107,7 +107,7 @@
 
 	
 	<div class="ekit-admin-right-content--button attr-text-center">
-		<a target="_blank" href="https://www.youtube.com/channel/UCpsjAqTeTqwFTMV580D3YvQ" class="attr-btn attr-btn-primary ekit-admin-right-content--link"><i class="fa fa-question-circle"></i><?php esc_html_e( 'View all faq’s', 'elementskit-lite' ); ?></a>
+		<a target="_blank" href="https://www.youtube.com/channel/UCpsjAqTeTqwFTMV580D3YvQ" class="attr-btn attr-btn-primary ekit-admin-right-content--link"><i class="fas fa-question-circle"></i><?php esc_html_e( 'View all faq’s', 'elementskit-lite' ); ?></a>
 	</div>
 </div>
 
@@ -120,7 +120,7 @@
 		</div> 
 		<p><?php esc_html_e( 'Stuck somewhere? Feel free to open a ticket for getting Pro support.', 'elementskit-lite' ); ?></p>
 		<div class="ekit-admin-right-content--button">
-			<a target="_blank" href="https://wpmet.com/support-ticket-form/" class="attr-btn attr-btn-primary ekit-admin-right-content--link"><i class="fa fa-question-circle"></i><?php esc_html_e( 'Join support forum', 'elementskit-lite' ); ?></a>
+			<a target="_blank" href="https://wpmet.com/support-ticket-form/" class="attr-btn attr-btn-primary ekit-admin-right-content--link"><i class="fas fa-question-circle"></i><?php esc_html_e( 'Join support forum', 'elementskit-lite' ); ?></a>
 		</div>
 	</div>
 	
@@ -139,7 +139,7 @@
 
 		<p><?php esc_html_e( 'Maybe we’re missing something you can’t live without.', 'elementskit-lite' ); ?></p>
 		<div class="ekit-admin-right-content--button">
-			<a target="_blank" href="https://wpmet.com/plugin/elementskit/roadmaps/#ideas" class="attr-btn attr-btn-primary ekit-admin-right-content--link"><i class="fa fa-check-circle"></i><?php esc_html_e( 'Request a Feature', 'elementskit-lite' ); ?></a>
+			<a target="_blank" href="https://wpmet.com/plugin/elementskit/roadmaps/#ideas" class="attr-btn attr-btn-primary ekit-admin-right-content--link"><i class="fas fa-check-circle"></i><?php esc_html_e( 'Request a Feature', 'elementskit-lite' ); ?></a>
 		</div>
 	</div>
 </div>
@@ -151,7 +151,7 @@
 
 		<p><span><?php esc_html_e( 'Satisfied?', 'elementskit-lite' ); ?></span><?php esc_html_e( 'Don’t forget to rate ElementsKit', 'elementskit-lite' ); ?></p>
 		<div class="ekit-admin-right-content--button">
-			<a target="_blank" href="https://wordpress.org/support/plugin/elementskit-lite/reviews/?rate=5#new-post" class="attr-btn attr-btn-primary ekit-admin-right-content--link"><i class="fa fa-star"></i><?php esc_html_e( 'Rate it now', 'elementskit-lite' ); ?></a>
+			<a target="_blank" href="https://wordpress.org/support/plugin/elementskit-lite/reviews/?rate=5#new-post" class="attr-btn attr-btn-primary ekit-admin-right-content--link"><i class="fas fa-star"></i><?php esc_html_e( 'Rate it now', 'elementskit-lite' ); ?></a>
 		</div>
 	</div>
 

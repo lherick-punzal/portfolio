@@ -15,8 +15,15 @@ class Onboard_Status {
 	public function onboard() {
 
 		add_action( 'elementskit/admin/after_save', array( $this, 'ajax_action' ) );
+		( new Install_Notice() )->init();
 		
 		if ( get_option( $this->optionKey ) ) {
+			return true;
+		}
+
+		// Skip onboarding when ElementsKit was installed by another Wpmet onboarding flow.
+		if ( Install_Tracker::was_auto_installed( 'elementskit-lite/elementskit-lite.php' ) ) {
+			$this->finish_onboard();
 			return true;
 		}
 
@@ -49,12 +56,14 @@ class Onboard_Status {
 		$this->finish_onboard();
 
 		if ( ! empty( $_POST['settings']['newsletter_email'] ) && is_email( $_POST['settings']['newsletter_email'] ) ) {
+			$email = sanitize_email( wp_unslash( $_POST['settings']['newsletter_email'] ) );
 			$data = array(
-				'email'           => sanitize_email( wp_unslash( $_POST['settings']['newsletter_email'] ) ),
+				'email'           => $email,
 				'slug'            => 'elementskit-lite',
 			);
 
 			$response = Plugin_Data_Sender::instance()->sendEmailSubscribeData( 'plugin-subscribe', $data );
+			Install_Tracker::store_collected_email( $email );
 		}
 	}
 

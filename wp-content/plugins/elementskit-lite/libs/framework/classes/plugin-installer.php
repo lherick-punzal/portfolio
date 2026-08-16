@@ -5,6 +5,12 @@ namespace ElementsKit_Lite\Libs\Framework\Classes;
 defined( 'ABSPATH' ) || exit;
 
 class Plugin_Installer {
+	/**
+	 * Plugin slug recorded as the source of onboarding installations.
+	 *
+	 * @var string
+	 */
+	private $installed_by = 'elementskit-lite';
 
 	private $plugin_file;
 	private $plugin_slug;
@@ -33,6 +39,7 @@ class Plugin_Installer {
 			
 			$activate = activate_plugin( $this->plugin_file, '', false, $silent );
 			if ( ! is_wp_error( $activate ) ) {
+				Install_Tracker::mark( $this->plugin_file, $this->installed_by );
 				return true;
 			}
 		} else {
@@ -65,6 +72,7 @@ class Plugin_Installer {
 
 			$activate = activate_plugin( $this->plugin_file, '', false, $silent );
 			if ( ! is_wp_error( $activate ) ) {
+				Install_Tracker::mark( $this->plugin_file, $this->installed_by );
 				return true;
 			}
 		}

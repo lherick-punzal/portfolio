@@ -31,6 +31,10 @@ class ElementsKit_Widget_Icon_Hover extends Widget_Base {
         return '';
     }
 
+    public function get_style_depends() {
+        return ['ekit-icon-hover'];
+    }
+
     protected function register_controls() {
         $this->start_controls_section(
             'section_tab', [

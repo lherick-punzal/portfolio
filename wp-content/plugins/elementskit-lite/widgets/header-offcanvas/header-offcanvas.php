@@ -17,6 +17,10 @@ class ElementsKit_Widget_Header_Offcanvas extends Widget_Base
 		return ['ekit-header-offcanvas'];
 	}
 
+	public function get_style_depends() {
+		return ['ekit-header-offcanvas'];
+	}
+
     public function get_name() {
         return Handler::get_name();
     }
@@ -360,7 +364,7 @@ class ElementsKit_Widget_Header_Offcanvas extends Widget_Base
                     'default' => '#333',
                     'selectors' => [
                         '{{WRAPPER}} .ekit_navSidebar-button' => 'color: {{VALUE}};',
-                        '{{WRAPPER}} .ekit_navSidebar-button svg path'  => 'stroke: {{VALUE}}; fill: {{VALUE}};',
+                        '{{WRAPPER}} .ekit_navSidebar-button svg'  => 'fill: {{VALUE}};',
                     ],
                 ]
             );
@@ -392,7 +396,7 @@ class ElementsKit_Widget_Header_Offcanvas extends Widget_Base
                     'type' => Controls_Manager::COLOR,
                     'selectors' => [
                         '{{WRAPPER}} .ekit_navSidebar-button:hover' => 'color: {{VALUE}};',
-                        '{{WRAPPER}} .ekit_navSidebar-button:hover svg path'  => 'stroke: {{VALUE}}; fill: {{VALUE}};',
+                        '{{WRAPPER}} .ekit_navSidebar-button:hover svg'  => 'fill: {{VALUE}};',
                     ],
                 ]
             );
@@ -587,7 +591,7 @@ class ElementsKit_Widget_Header_Offcanvas extends Widget_Base
                     'default' => '#333',
                     'selectors' => [
                         '{{WRAPPER}} .ekit_close-side-widget' => 'color: {{VALUE}};',
-                        '{{WRAPPER}} .ekit_close-side-widget svg path'  => 'stroke: {{VALUE}}; fill:{{VALUE}};',
+                        '{{WRAPPER}} .ekit_close-side-widget svg'  => 'fill:{{VALUE}};',
                     ],
                 ]
             );
@@ -619,7 +623,7 @@ class ElementsKit_Widget_Header_Offcanvas extends Widget_Base
                     'type' => Controls_Manager::COLOR,
                     'selectors' => [
                         '{{WRAPPER}} .ekit_close-side-widget:hover' => 'color: {{VALUE}};',
-                        '{{WRAPPER}} .ekit_close-side-widget:hover svg path' => 'stroke: {{VALUE}}; fill: {{VALUE}};'
+                        '{{WRAPPER}} .ekit_close-side-widget:hover svg' => 'fill: {{VALUE}};'
                     ],
                 ]
             );
@@ -855,9 +859,16 @@ class ElementsKit_Widget_Header_Offcanvas extends Widget_Base
 
         $menu_icons_position = isset($settings['ekit_offcanvas_menu_icons_position']) ? $settings['ekit_offcanvas_menu_icons_position'] : 'before';
         $close_icons_position = isset($settings['ekit_offcanvas_menu_close_icons_position']) ? $settings['ekit_offcanvas_menu_close_icons_position'] : 'before';
+
+        // Accessibility helpers.
+        $offcanvas_sidebar_id     = 'ekit-offcanvas-' . $this->get_id();
+        // Only add an aria-label when the control shows no visible text (icon-only),
+        // so we never override a visible label (WCAG 2.5.3 Label in Name).
+        $offcanvas_open_has_text  = in_array( $settings['ekit_offcanvas_menu_type'], [ 'text', 'icon_with_text' ], true );
+        $offcanvas_close_has_text = in_array( $settings['ekit_offcanvas_menu_close_type'], [ 'text', 'icon_with_text' ], true );
         ?>
         <div class="ekit-offcanvas-toggle-wraper <?php echo esc_attr($menu_icons_position); ?>">
-            <a href="#" class="ekit_navSidebar-button ekit_offcanvas-sidebar" aria-label="offcanvas-menu">
+            <a href="#" class="ekit_navSidebar-button ekit_offcanvas-sidebar" role="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="<?php echo esc_attr( $offcanvas_sidebar_id ); ?>"<?php echo $offcanvas_open_has_text ? '' : ' aria-label="' . esc_attr__( 'Open menu', 'elementskit-lite' ) . '"'; ?>>
                 <?php
                     if($settings['ekit_offcanvas_menu_type'] !== 'text') {
                         // new icon
@@ -882,12 +893,12 @@ class ElementsKit_Widget_Header_Offcanvas extends Widget_Base
         </div>
         <!-- offset cart strart -->
         <!-- sidebar cart item -->
-        <div class="ekit-sidebar-group info-group <?php echo esc_attr($settings['ekit_header_search_style']); ?>" data-settings="<?php echo esc_attr( wp_json_encode($data_settings)); ?>">
+        <div id="<?php echo esc_attr( $offcanvas_sidebar_id ); ?>" class="ekit-sidebar-group info-group <?php echo esc_attr($settings['ekit_header_search_style']); ?>" data-settings="<?php echo esc_attr( wp_json_encode($data_settings)); ?>" role="dialog" aria-modal="true" aria-label="<?php echo esc_attr__( 'Menu', 'elementskit-lite' ); ?>">
             <div class="ekit-overlay ekit-bg-black"></div>
             <div class="ekit-sidebar-widget">
                 <div class="ekit_sidebar-widget-container">
                     <div class="ekit_widget-heading <?php echo esc_attr($close_icons_position); ?>">
-                        <a href="#" class="ekit_close-side-widget" aria-label="close-icon">
+                        <a href="#" class="ekit_close-side-widget" role="button"<?php echo $offcanvas_close_has_text ? '' : ' aria-label="' . esc_attr__( 'Close menu', 'elementskit-lite' ) . '"'; ?>>
 
 							<?php
 								// new icon

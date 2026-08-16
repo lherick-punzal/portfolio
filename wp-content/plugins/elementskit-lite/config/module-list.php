@@ -142,6 +142,12 @@ class Module_List extends \ElementsKit_Lite\Core\Config_List {
 					'title'             => 'Scroll Reveal',
 					'attributes'        => array( 'new' ),
 				],
+				'marquee' => [
+					'slug'              => 'marquee',
+					'package'           => 'pro-disabled',
+					'title'             => 'Marquee (Anything)',
+					'attributes'        => array( 'new' ),
+				],
 			)
 		);
 	}

@@ -16,6 +16,10 @@ class ElementsKit_Widget_Post_Tab extends Widget_Base {
 		return ['ekit-post-tab'];
 	}
 
+	public function get_style_depends() {
+		return ['ekit-post-tab'];
+	}
+
 	public function get_name() {
         return Handler::get_name();
     }
@@ -499,19 +503,24 @@ class ElementsKit_Widget_Post_Tab extends Widget_Base {
 
     protected function render_raw( ) {
         $settings = $this->get_settings_for_display();
-        extract($settings); if(empty($post_cat)){return false;}; ?>
+        extract($settings); if(empty($post_cat)){return false;};
+        $posttab_uid     = uniqid();
+        // Link mode renders the headers as real archive links (navigation), so
+        // tab semantics only apply to the default span-based switcher.
+        $posttab_is_link = ( isset( $settings['ekit_post_tab_on_click_link_archive'] ) && $settings['ekit_post_tab_on_click_link_archive'] === 'yes' );
+        ?>
 		<div class="ekit-post-tab post--tab hover--active <?php echo !empty($image_disable_hover_effect) && $image_disable_hover_effect == 'yes' ? 'disbale-hover' : ''; ?>">
             <div class="tabHeader">
-                <div class="tab__list">
+                <div class="tab__list"<?php echo $posttab_is_link ? '' : ' role="tablist"'; ?>>
 					<?php $i=1;  foreach($post_cat as $cat):
 						$categoryURL    = get_category_link($cat);
 						?>
-						<?php if ($settings['ekit_post_tab_on_click_link_archive'] === 'yes') { ?>
+						<?php if ($posttab_is_link) { ?>
                         <a href="<?php echo esc_url( $categoryURL ); ?>" class="<?php echo ($i==1)? 'active': ''; ?> tab__list__item">
                             <?php echo esc_html(get_cat_name($cat));?>
                         </a>
 						<?php } else {  ?>
-                        <span class="<?php echo ($i==1)? 'active': ''; ?> tab__list__item">
+                        <span class="<?php echo ($i==1)? 'active': ''; ?> tab__list__item" role="tab" id="ekit-posttab-<?php echo esc_attr($posttab_uid); ?>-tab-<?php echo esc_attr($i); ?>" tabindex="0" aria-selected="<?php echo ($i==1) ? 'true' : 'false'; ?>" aria-controls="ekit-posttab-<?php echo esc_attr($posttab_uid); ?>-panel-<?php echo esc_attr($i); ?>">
                             <?php echo esc_html(get_cat_name($cat));?>
                         </span>
 						<?php }; ?>
@@ -545,7 +554,7 @@ class ElementsKit_Widget_Post_Tab extends Widget_Base {
 						]
 					);
 					?>
-                    <div class="tabItem <?php echo ($j==1)? 'active': ''; ?>">
+                    <div class="tabItem <?php echo ($j==1)? 'active': ''; ?>"<?php echo $posttab_is_link ? '' : ' role="tabpanel" id="ekit-posttab-' . esc_attr($posttab_uid) . '-panel-' . esc_attr($j) . '" aria-labelledby="ekit-posttab-' . esc_attr($posttab_uid) . '-tab-' . esc_attr($j) . '" tabindex="0"'; ?>>
                         <?php $xs_query = new \WP_Query( $query );
                         if($xs_query->have_posts()):
                             while ($xs_query->have_posts()) :
@@ -554,7 +563,7 @@ class ElementsKit_Widget_Post_Tab extends Widget_Base {
                                 <?php if(has_post_thumbnail()): ?>
                                     <div <?php echo $this->get_render_attribute_string('ekit-single-item'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Already escaped by elementor ?>>
                                         <div class="tab__post__single--inner">
-                                            <a href="<?php echo esc_url(get_the_permalink()); ?>" class="tab__post--header" aria-label="url">
+                                            <a href="<?php echo esc_url(get_the_permalink()); ?>" class="tab__post--header" aria-label="<?php echo esc_attr( get_the_title() ); ?>">
                                                 <?php the_post_thumbnail(); ?>
                                             </a>
                                             <h3 class="tab__post--title"><a href="<?php echo esc_url(get_the_permalink()); ?>"><?php the_title(); ?></a></h3>

@@ -34,6 +34,11 @@ class ElementsKit_Widget_Page_List extends Widget_Base {
     public function get_help_url() {
         return 'https://wpmet.com/doc/page-list/';
     }
+
+    public function get_style_depends() {
+        return ['ekit-page-list'];
+    }
+
     protected function is_dynamic_content(): bool {
         return false;
     }
@@ -122,7 +127,7 @@ class ElementsKit_Widget_Page_List extends Widget_Base {
 				'default' => '',
 				'selectors' => [
 					'{{WRAPPER}} {{CURRENT_ITEM}} .elementor-icon-list-icon i' => 'color: {{VALUE}};',
-					'{{WRAPPER}} {{CURRENT_ITEM}} .elementor-icon-list-icon svg path'	=> 'stroke: {{VALUE}}; fill: {{VALUE}};'
+					'{{WRAPPER}} {{CURRENT_ITEM}} .elementor-icon-list-icon svg'	=> 'fill: {{VALUE}};'
 				],
 				'condition' => [
 					'ekit_page_list_show_icon' => 'yes'
@@ -311,7 +316,7 @@ class ElementsKit_Widget_Page_List extends Widget_Base {
 			]
 		);
 
-		
+
 		$this->end_controls_section();
 
 		$this->start_controls_section(
@@ -718,7 +723,7 @@ class ElementsKit_Widget_Page_List extends Widget_Base {
 				'default' => '',
 				'selectors' => [
 					'{{WRAPPER}} .elementor-icon-list-item:hover .elementor-icon-list-icon i' => 'color: {{VALUE}};',
-					'{{WRAPPER}} .elementor-icon-list-item:hover .elementor-icon-list-icon svg path'	=> 'stroke: {{VALUE}}; fill: {{VALUE}};'
+					'{{WRAPPER}} .elementor-icon-list-item:hover .elementor-icon-list-icon svg'	=> 'fill: {{VALUE}};'
 				],
 			]
 		);

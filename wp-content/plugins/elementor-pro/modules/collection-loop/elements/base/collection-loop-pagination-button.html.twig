@@ -1,0 +1,11 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html><head><meta charset="UTF-8"></head><body><p>{% import 'elementor/macros' as m %}
+{%- set pagination = pagination | default({}) -%}
+{%- set classes = settings.classes | merge( [ base_styles.base ] ) | join(' ') -%}
+{%- set direction = pagination.direction | default('next') -%}
+{%- set disabled_class = pagination.is_disabled ? ' e--disabled' : '' -%}
+{%- set is_link = pagination.has_context and not pagination.is_disabled -%}
+<a class="{{ classes }}{{ disabled_class }} {{ editor_classes | default('') }}" m.render_data_attributes type interaction_id aria-label="{{ pagination.aria_label|e('html_attr') }}" if pagination.aria_controls aria-controls="{{ pagination.aria_controls|e('html_attr') }}" endif is_link href="https://lherick-punzal.github.io/portfolio/wp-content/plugins/elementor-pro/modules/collection-loop/elements/base/pagination.href%7Ce('html_attr')%20%7D%7D" data-e-pagination-link else aria-disabled="true" tabindex="-1" data-e-pagination="{{ direction }}" m.render_custom_attributes editor_attributes>
+	<!-- elementor-children-placeholder -->
+</a>
+</p></body></html>

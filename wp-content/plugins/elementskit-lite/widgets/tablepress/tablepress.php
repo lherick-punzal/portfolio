@@ -38,6 +38,11 @@ class ElementsKit_Widget_TablePress extends Widget_Base {
     public function get_help_url() {
         return 'https://wpmet.com/doc/data-table-2/';
     }
+
+	public function get_style_depends() {
+		return ['ekit-tablepress'];
+	}
+
     protected function is_dynamic_content(): bool {
         return true;
     }

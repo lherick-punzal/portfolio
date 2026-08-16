@@ -37,7 +37,6 @@ if ( $ekit_video_style === 'popup' ) {
     $this->add_render_attribute( 'button', [
         'class'      => [ 'ekit-video-popup', 'ekit-video-popup-btn' ],
         'href'       => $href,
-        'aria-label' => 'video-popup'
     ] );
 }
 
@@ -45,8 +44,14 @@ if ( $ekit_video_style === 'inline' && !empty($ekit_video_inline_overlay_image['
     $this->add_render_attribute( 'button', [
         'class'      => [ 'ekit-video-inline-btn' ],
         'href'       => $ekit_video_popup_url,
-        'aria-label' => 'video-inline'
     ] );
+}
+
+// Icon-only button has no visible text, so give it an accessible name.
+// (When a title is shown, the visible text is the accessible name and must
+// not be overridden by an aria-label — WCAG 2.5.3 Label in Name.)
+if ( $ekit_video_popup_button_style === 'icon' ) {
+    $this->add_render_attribute( 'button', 'aria-label', esc_attr__( 'Play video', 'elementskit-lite' ) );
 }
 ?>
 

@@ -27,8 +27,10 @@ class Editor_Promotion {
 					'icon' => isset($widget['icon']) ? $widget['icon'] : 'eicon-star',
 					'categories' => ['elementskit'],
 					'promotion' => [
+						/* translators: %s: Widget name. */
 						'title' => sprintf(__('%s Widget', 'elementskit-lite'), isset($widget['title']) ? $widget['title'] : ucwords(str_replace('-', ' ', $slug))),
 						'description' => sprintf(
+							/* translators: %s: Widget name. */
 							__( 'Unlock the %s widget and dozens of powerful ElementsKit Pro features to design faster, smarter, and more flexible websites.', 'elementskit-lite'),
 							isset($widget['title']) ? $widget['title'] : ucwords(str_replace('-', ' ', $slug))
 						),

@@ -22,7 +22,7 @@
 							<span class="ekit-admin-subtitle"><?php echo esc_html( $section['sub-title'] ); ?></span>
 						</div>
 						<div class="ekit-admin-tab-icon">
-							<?php echo ($section['svg']); ?>
+							<?php echo wp_kses( $section['svg'], \ElementsKit_Lite\Utils::get_kses_array() ); ?>
 						</div>
 					</a>
 				</li>
@@ -80,7 +80,7 @@ endforeach;
 							</div>
 						<?php endif; ?>
 						<div class="ekit-admin-input-switch">
-							<button class="attr-btn-primary attr-btn ekit-admin-settings-form-submit"><div class="ekit-spinner"></div><i class="ekit-admin-save-icon fa fa-check-circle"></i><?php esc_html_e( 'Save Changes', 'elementskit-lite' ); ?></button>
+							<button class="attr-btn-primary attr-btn ekit-admin-settings-form-submit"><div class="ekit-spinner"></div><i class="ekit-admin-save-icon fas fa-check-circle"></i><?php esc_html_e( 'Save Changes', 'elementskit-lite' ); ?></button>
 						</div>
 					</div>
 					<?php 

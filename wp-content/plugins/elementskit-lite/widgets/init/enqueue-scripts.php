@@ -7,10 +7,11 @@ defined( 'ABSPATH' ) || exit;
 class Enqueue_Scripts {
 
 	public function __construct() {
-		add_action( 'elementor/frontend/after_register_scripts', [$this, 'register_scripts'], 9 );
+		add_action( 'wp_enqueue_scripts', [$this, 'register_scripts'], 9 );
 		add_action( 'elementor/frontend/after_enqueue_scripts', [$this, 'enqueue_scripts'] );
 
 		add_action( 'elementor/frontend/after_register_styles', [$this, 'register_frontend_css'] );
+		add_action( 'wp_enqueue_scripts', [$this, 'enqueue_frontend_scripts'], 99 );
 		add_action( 'wp_enqueue_scripts', [$this, 'enqueue_frontend_css'], 99 );
 
 		add_action( 'elementor/preview/enqueue_styles', [ $this, 'enqueue_3rd_party_style' ] );
@@ -39,20 +40,25 @@ class Enqueue_Scripts {
 			return;
 		}
 
-		// register script for gallery, video gallery
-		wp_register_script('gallery-filter', \ElementsKit_Lite::widget_url() . 'init/assets/js/gallery-filter.js', array('jquery'), \ElementsKit_Lite::version(), true);
+		//third party scripts for widgets
+		// these both library is for image comparison widget
+		wp_register_script('event.move', \ElementsKit_Lite::plugin_url() . 'assets/libs/event-move-js/jquery.event.move.js', ['jquery'], \ElementsKit_Lite::version(), true);
+		wp_register_script('twentytwenty', \ElementsKit_Lite::plugin_url() . 'assets/libs/twentytwenty/jquery.twentytwenty.js', ['jquery'], \ElementsKit_Lite::version(), true);
+
+		//ekit masonry layout
+		wp_register_script('ekit-masonry', \ElementsKit_Lite::widget_url() . 'init/assets/js/ekit-masonry.js', [], \ElementsKit_Lite::version(), true);
+
+		// ui script alternative of bootstrap. Used in [Tab, Advanced Tab, Accordion, Advanced Accordion, Advanced Toggle] widget
+		wp_register_script('ui-slim', \ElementsKit_Lite::widget_url() . 'init/assets/js/ekit-ui.js', ['jquery'], \ElementsKit_Lite::version(), true);
 
 		// register script for countdown timer
-		wp_register_script( 'final-countdown', \ElementsKit_Lite::widget_url() . 'init/assets/js/jquery.countdown.min.js', array(), \ElementsKit_Lite::version(), true );
+		wp_register_script( 'final-countdown', \ElementsKit_Lite::plugin_url() . 'assets/libs/final-countdown/jquery.countdown.min.js', array(), \ElementsKit_Lite::version(), true );
 
 		// register script for piechart
-		wp_register_script( 'easy-pie-chart', \ElementsKit_Lite::widget_url() . 'init/assets/js/jquery.easypiechart.min.js', array(), \ElementsKit_Lite::version(), true );
+		wp_register_script( 'easy-pie-chart', \ElementsKit_Lite::plugin_url() . 'assets/libs/easy-pie-chart/jquery.easypiechart.min.js', array(), \ElementsKit_Lite::version(), true );
 
-		// register script for magnific-popup
-		wp_register_script( 'magnific-popup', \ElementsKit_Lite::widget_url() . 'init/assets/js/jquery.magnific-popup.min.js', array(), \ElementsKit_Lite::version(), true );
-
-		// Core most of the widgets init are bundled
-		wp_enqueue_script( 'ekit-widget-scripts', \ElementsKit_Lite::widget_url() . 'init/assets/js/widget-scripts.js', array(), \ElementsKit_Lite::version(), true );
+		// register script for magnific-popup. Used in [video, team, header-search, team-slider, video-gallery, woo-product-carousel, woo-product-list] widget
+		wp_register_script( 'magnific-popup', \ElementsKit_Lite::plugin_url() . 'assets/libs/magnific-popup/jquery.magnific-popup.min.js', array(), \ElementsKit_Lite::version(), true );
 
 		// register script for mailchimp
 		wp_register_script( 'ekit-mailchimp', \ElementsKit_Lite::widget_url() . 'init/assets/js/mail-chimp.js', array(), \ElementsKit_Lite::version(), true );
@@ -60,14 +66,21 @@ class Enqueue_Scripts {
 		// register script for pricing table
 		wp_register_script( 'ekit-info-tip', \ElementsKit_Lite::widget_url() . 'init/assets/js/info-tip.js', array(), \ElementsKit_Lite::version(), true );
 
-		// sosial share
-		wp_register_script( 'goodshare', \ElementsKit_Lite::widget_url() . 'init/assets/js/goodshare.min.js', array( 'jquery' ), \ElementsKit_Lite::version(), true );
+		// social share
+		wp_register_script( 'goodshare', \ElementsKit_Lite::plugin_url() . 'assets/libs/goodshare/goodshare.min.js', array( 'jquery' ), \ElementsKit_Lite::version(), true );
 
 		// funfact widget
-		wp_register_script( 'odometer', \ElementsKit_Lite::widget_url() . 'init/assets/js/odometer.min.js', array('jquery'), \ElementsKit_Lite::version(), true );
+		wp_register_script( 'odometer', \ElementsKit_Lite::plugin_url() . 'assets/libs/odometer/odometer.min.js', array('jquery'), \ElementsKit_Lite::version(), true );
 
-		// Animate Circle Script
-		wp_register_script( 'animate-circle', \ElementsKit_Lite::widget_url() . 'init/assets/js/animate-circle.min.js', [], \ElementsKit_Lite::version(), true );
+		// Animate Circle Script. Used in [Back to Top] widget
+		wp_register_script( 'animate-circle', \ElementsKit_Lite::widget_url() . 'init/assets/js/animate-circle.js', [], \ElementsKit_Lite::version(), true );
+
+		// register scripts for lottie widget
+		wp_register_script( 'lottie', \ElementsKit_Lite::plugin_url() . 'assets/libs/lottie/lottie.min.js', [], \ElementsKit_Lite::version(), true );
+		wp_register_script( 'lottie-init', \ElementsKit_Lite::widget_url() . 'init/assets/js/lottie.init.js', ['lottie', 'elementor-frontend'], \ElementsKit_Lite::version(), true );
+
+		// Nav menu & vertical menu widget script
+		wp_register_script( 'ekit-menu', \ElementsKit_Lite::widget_url() . 'init/assets/js/nav-menu.js', ['jquery'], \ElementsKit_Lite::version(), true );
 
 		// Register split Elementor widget scripts.
 		wp_register_script( 'ekit-core', \ElementsKit_Lite::widget_url() . 'init/assets/js/widgets/core.js', ['jquery', 'elementor-frontend'], \ElementsKit_Lite::version(), true );
@@ -76,16 +89,20 @@ class Enqueue_Scripts {
 
 		$widget_list = \ElementsKit_Lite\Config\Widget_List::instance()->get_list( 'all' );
 
+		wp_register_style( 'ekit-widget-common', \ElementsKit_Lite::widget_url() . 'init/assets/css/common.css', [], \ElementsKit_Lite::version() );
+
 		foreach ( $widget_list as $widget_slug => $widget ) {
-			if ( empty( $widget['hasJS'] ) ) {
-				continue;
+			if ( ! empty( $widget['hasJS'] ) ) {
+				$script_handle = 'ekit-' . $widget_slug;
+				$script_file   = $widget_slug . '.js';
+
+				wp_register_script( $script_handle, \ElementsKit_Lite::widget_url() . 'init/assets/js/widgets/' . $script_file, [ 'ekit-core' ], \ElementsKit_Lite::version(), true );
 			}
 
-			$script_handle = 'ekit-' . $widget_slug;
-			$script_file = $widget_slug . '.js';
-			$deps = [ 'ekit-core' ];
-
-			wp_register_script( $script_handle, \ElementsKit_Lite::widget_url() . 'init/assets/js/widgets/' . $script_file, $deps, \ElementsKit_Lite::version(), true );
+			$css_file = $widget_slug . '.css';
+			if ( file_exists( \ElementsKit_Lite::widget_dir() . 'init/assets/css/' . $css_file ) ) {
+				wp_register_style( 'ekit-' . $widget_slug, \ElementsKit_Lite::widget_url() . 'init/assets/css/' . $css_file, [ 'ekit-widget-common' ], \ElementsKit_Lite::version() );
+			}
 		}
 	}
 
@@ -123,10 +140,6 @@ class Enqueue_Scripts {
 			wp_enqueue_style( 'fluentform-public-default' );
 		}
 
-		// register scripts for lottie
-		wp_register_script( 'lottie', \ElementsKit_Lite::widget_url() . 'lottie/assets/js/lottie.min.js', [], \ElementsKit_Lite::version(), true );
-		wp_register_script( 'lottie-init', \ElementsKit_Lite::widget_url() . 'lottie/assets/js/lottie.init.js', ['lottie', 'elementor-frontend'], \ElementsKit_Lite::version(), true );
-	
 		// Enqueue admin toolbar script for logged-in users
 		if(is_user_logged_in()) {
 			wp_enqueue_script( 'ekit-admin-toolbar' );
@@ -134,16 +147,70 @@ class Enqueue_Scripts {
 	}
 
 	public function register_frontend_css() {
+		//third party styles for widgets
 		// odometer styles
-		wp_register_style( 'odometer', \ElementsKit_Lite::widget_url() . 'init/assets/css/odometer-theme-default.css', [], \ElementsKit_Lite::version() );
-		//gallery filter
-		wp_register_style( 'gallery-filter', \ElementsKit_Lite::widget_url() . 'init/assets/css/gallery-filter.css', [], \ElementsKit_Lite::version() );
+		wp_register_style( 'odometer', \ElementsKit_Lite::plugin_url() . 'assets/libs/odometer/odometer-theme-default.css', [], \ElementsKit_Lite::version() );
+		// twentytwenty styles - this library is used for image comparison widget
+		wp_register_style( 'twentytwenty', \ElementsKit_Lite::plugin_url() . 'assets/libs/twentytwenty/twentytwenty.css', [], \ElementsKit_Lite::version() );
+
+		//maginific-popup styles
+		wp_register_style( 'magnific-popup', \ElementsKit_Lite::plugin_url() . 'assets/libs/magnific-popup/magnific-popup.css', [], time() );
 	}
 
+	/**
+	 * Enqueues scripts required by interactive Header/Footer Builder widgets.
+	 *
+	 * Header content can render before normal widget-level asset detection runs.
+	 * These scripts are intentionally enqueued as a narrow exception so header
+	 * controls initialize reliably; all other widget scripts remain dynamically
+	 * loaded only when required.
+	 *
+	 * @return void
+	 */
+	public function enqueue_frontend_scripts() {
+		$header_script_handles = [
+			'ekit-core',
+			'ekit-nav-menu',
+			'magnific-popup',
+			'ekit-menu',
+			'countdown-timer',
+			'ekit-header-search',
+			'ekit-header-offcanvas',
+		];
+
+		foreach ( $header_script_handles as $script_handle ) {
+			if ( wp_script_is( $script_handle, 'registered' ) ) {
+				wp_enqueue_script( $script_handle );
+			}
+		}
+	}
+
+	/**
+	 * Enqueues frontend styles that must be available before header markup renders.
+	 *
+	 * Header/Footer Builder content can render before normal widget-level asset
+	 * detection enqueues the nav menu, header search, offcanvas, and info styles.
+	 * These styles are intentionally enqueued in the document head to prevent unstyled
+	 * header content, layout shifts, and flashes of unstyled content. This is a
+	 * narrow exception to the dynamic CSS loading strategy; all other widget styles
+	 * continue to load only when their widgets require them.
+	 *
+	 * @return void
+	 */
 	public function enqueue_frontend_css() {
-		// main styles
-		wp_enqueue_style( 'ekit-widget-styles', \ElementsKit_Lite::widget_url() . 'init/assets/css/widget-styles.css', [], \ElementsKit_Lite::version() );
-		wp_enqueue_style( 'ekit-responsive', \ElementsKit_Lite::widget_url() . 'init/assets/css/responsive.css', [], \ElementsKit_Lite::version() );
+		$header_style_handles = [
+			'ekit-nav-menu',
+			'ekit-header-search',
+			'ekit-header-offcanvas',
+			'ekit-header-info',
+			'countdown-timer',
+		];
+
+		foreach ( $header_style_handles as $style_handle ) {
+			if ( wp_style_is( $style_handle, 'registered' ) ) {
+				wp_enqueue_style( $style_handle );
+			}
+		}
 
 		// RTL styles
 		if ( is_rtl() ) {

@@ -20,6 +20,10 @@ class ElementsKit_Widget_Countdown_Timer extends Widget_Base {
 		return ['ekit-countdown-timer', 'final-countdown'];
 	}
 
+	public function get_style_depends() {
+		return ['ekit-countdown-timer'];
+	}
+
     public function get_name() {
         return Handler::get_name();
     }
@@ -1902,6 +1906,19 @@ class ElementsKit_Widget_Countdown_Timer extends Widget_Base {
 			$this->add_render_attribute('ekit_countdown_timer', 'data-ekit-countdown', esc_attr($ekit_countdown_timer_due_time));
 		}
 
+		// Accessibility: expose the countdown as a labelled timer region. aria-live is
+		// intentionally "off" — announcing every second would be extremely disruptive
+		// for screen-reader users; the current values (each already paired with a unit
+		// label in the markup, e.g. "05 Days") stay readable on demand.
+		$this->add_render_attribute(
+			'ekit_countdown_timer',
+			[
+				'role'       => 'timer',
+				'aria-live'  => 'off',
+				'aria-label' => esc_attr__( 'Countdown timer', 'elementskit-lite' ),
+			]
+		);
+
 		switch ( $ekit_countdown_timer_style ) {
 			case 'style1' :
 				$this->add_render_attribute('ekit_countdown_timer', 'class', 'elementskit-countdown-timer ekit-countdown text-center');
@@ -1937,7 +1954,7 @@ class ElementsKit_Widget_Countdown_Timer extends Widget_Base {
                 '<div %s></div>', 
                 $this->get_render_attribute_string('ekit_countdown_timer'),
             );
-            echo $finish_content;
+            echo wp_kses_post( $finish_content );
         } else {
             $markup = sprintf(
                 '<div class="elementskit-countdown-container text-center"><div %s></div>%s</div>',

@@ -38,6 +38,10 @@ class ElementsKit_Widget_Fluent_Forms extends Widget_Base {
         return 'https://wpmet.com/doc/fluent-forms/';
     }
 
+    public function get_style_depends() {
+        return ['ekit-fluent-forms'];
+    }
+
     protected function is_dynamic_content(): bool {
         return false;
     }

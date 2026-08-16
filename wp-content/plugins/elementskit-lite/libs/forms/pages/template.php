@@ -12,6 +12,7 @@ $plugin = $pluginStatus->get_status( 'metform/metform.php' );
 			</div>
 			<div class="ekit-hero-copy">
 				<h1 class="ekit-hero-title"><?php esc_html_e('Your Visual Form Builder For WordPress', 'elementskit-lite'); ?></h1>
+				<?php /* translators: %s: Plugin name. */ ?>
 				<p class="ekit-sub"><?php echo sprintf( esc_html__('Install & activate %s and visually build fully-functional forms with all the advanced features and highest flexibility.', 'elementskit-lite'), '<span>MetForm</span>' ); ?></p>
 
 				<div class="ekit-hero-ctas">
@@ -361,6 +362,7 @@ $plugin = $pluginStatus->get_status( 'metform/metform.php' );
 								$col1 = esc_html($r[0]);
 								$col2 = (strpos($r[1], '<img') !== false) ? $r[1] : esc_html($r[1]);
 								$col3 = (strpos($r[2], '<img') !== false) ? $r[2] : esc_html($r[2]);
+								// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $col1, $col2 and $col3 are escaped above.
 								echo '<tr><td>'.$col1.'</td><td class="center">'.$col2.'</td><td class="center">'.$col3.'</td></tr>';
 							}
 						?>

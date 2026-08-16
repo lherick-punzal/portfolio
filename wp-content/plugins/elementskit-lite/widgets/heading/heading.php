@@ -36,6 +36,10 @@ class ElementsKit_Widget_Heading extends Widget_Base {
         return 'https://wpmet.com/doc/widget-documentation/';
     }
 
+    public function get_style_depends() {
+        return ['ekit-heading'];
+    }
+
     protected function is_dynamic_content(): bool {
         return false;
     }
