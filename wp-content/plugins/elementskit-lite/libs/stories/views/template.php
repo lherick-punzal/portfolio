@@ -86,7 +86,7 @@
 	<div class="wpmet-title-bar">
 		<?php
 		foreach ( $this->plugin_link as $k => $link ) {
-			echo '<a target="_blank" href="' . esc_url($link[1]) . '">' . esc_html($link[0]) . '</a>';
+			echo '<a target="_blank" rel="noopener noreferrer" href="' . esc_url($link[1]) . '">' . esc_html($link[0]) . '</a>';
 			if ( isset( $this->plugin_link[ $k + 1 ] ) ) {
 				echo '<div class="wpmet-bullet-wall"></div>';
 			}
@@ -102,13 +102,13 @@ foreach ( $this->stories as $story ) :
 		<div class="wpmet-str <?php echo ( ( isset( $story['story_image'] ) && $story['story_image'] != '' ) ? 'with-image' : '' ); ?>">
 			<?php if ( isset( $story['story_image'] ) && $story['story_image'] != '' ) : ?>
 				<div class="wpmet-str-thumb">
-					<img src="<?php echo esc_url( $story['story_image'] ); ?>" />
+					<img src="<?php echo esc_url( $story['story_image'] ); ?>" alt=" <?php echo esc_attr( $story['title'] ); ?> " />
 				</div>
 			<?php endif; ?>
 
 			<div  class="wpmet-str-desc">
 
-				<a target="_blank" href="<?php echo esc_url( $story['story_link'] ); ?>">
+				<a target="_blank" rel="noopener noreferrer" href="<?php echo esc_url( $story['story_link'] ); ?>">
 					<?php echo esc_html( $story['title'] ); ?>    
 				</a>
 
@@ -122,8 +122,8 @@ foreach ( $this->stories as $story ) :
 	elseif ( $story['type'] === 'banner' ) :
 		?>
 		<div class="wpmet-str">
-			<a target="_blank" href="<?php echo esc_url( $story['story_link'] ); ?>">
-				<img class="wpmet-banner" src="<?php echo isset( $story['story_image'] ) && $story['story_image'] != '' ? esc_url($story['story_image']) : '#'; ?>" />
+			<a target="_blank" rel="noopener noreferrer" href="<?php echo esc_url( $story['story_link'] ); ?>">
+				<img class="wpmet-banner" src="<?php echo isset( $story['story_image'] ) && $story['story_image'] != '' ? esc_url($story['story_image']) : '#'; ?>" alt="<?php echo esc_attr( $story['title'] ); ?>" />
 			</a>
 		</div>
 		<?php

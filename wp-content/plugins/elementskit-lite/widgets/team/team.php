@@ -118,6 +118,26 @@ class ElementsKit_Widget_Team extends Widget_Base {
         );
 
         $this->add_control(
+            'ekit_team_name_size',
+            [
+                'label' => esc_html__( 'Member Name HTML Tag', 'elementskit-lite' ),
+                'type' => Controls_Manager::SELECT,
+                'options' => [
+                    'h1' => 'H1',
+                    'h2' => 'H2',
+                    'h3' => 'H3',
+                    'h4' => 'H4',
+                    'h5' => 'H5',
+                    'h6' => 'H6',
+                    'div' => 'div',
+                    'span' => 'span',
+                    'p' => 'p',
+                ],
+                'default' => 'h2',
+            ]
+        );
+
+        $this->add_control(
             'ekit_team_position',
             [
                 'label' => esc_html__( 'Member Position', 'elementskit-lite' ),
@@ -2358,6 +2378,9 @@ class ElementsKit_Widget_Team extends Widget_Base {
 		$settings = $this->get_settings_for_display();
         extract($settings);
 
+		// Member name HTML tag
+		$ekit_team_name_tag = Utils::validate_html_tag( ! empty( $settings['ekit_team_name_size'] ) ? $settings['ekit_team_name_size'] : 'h2' );
+
 		// Image sectionn
 		$image_html = '';
 		if ( !empty($ekit_team_image['url']) ) {
@@ -2383,7 +2406,9 @@ class ElementsKit_Widget_Team extends Widget_Base {
 
                 // Link
                 $this->add_link_attributes( 'social_link_' . $icon['_id'], $icon['ekit_team_link'] );
-				$this->add_render_attribute( 'social_link_' . $icon['_id'], 'aria-label',  $icon['ekit_team_label'] );
+
+				// These links are icon-only, so the Label is their only accessible name.
+				$this->add_render_attribute( 'social_link_' . $icon['_id'], 'aria-label', ( $icon['ekit_team_label'] ?? '' ) ?: __( 'Social link', 'elementskit-lite' ) );
             }
         }
 
@@ -2428,7 +2453,7 @@ class ElementsKit_Widget_Team extends Widget_Base {
 					</div>
 					<?php endif; ?>
 
-					<h2 class="profile-title">
+					<<?php echo esc_attr( $ekit_team_name_tag ); ?> class="profile-title">
 					<?php if ($settings['ekit_team_chose_popup'] == 'yes') : ?>
 						<a aria-label="<?php echo esc_attr( sprintf( __( 'View %s profile', 'elementskit-lite' ), $ekit_team_name ) ); ?>" href="javascript:void(0)" data-mfp-src="#ekit_team_modal_<?php echo esc_attr($this->get_id() . '_' . get_the_ID()); ?>" class="ekit-team-popup">
 						<?php echo esc_html( $ekit_team_name ); ?>
@@ -2436,7 +2461,7 @@ class ElementsKit_Widget_Team extends Widget_Base {
 						<?php else: ?>
 						<?php echo esc_html( $ekit_team_name ); ?>
 					<?php endif; ?>
-					</h2>
+					</<?php echo esc_attr( $ekit_team_name_tag ); ?>>
 					<p class="profile-designation"><?php echo esc_html( $ekit_team_position ); ?></p>
 					<?php if($ekit_team_show_short_description == 'yes' && $ekit_team_short_description != ''): ?>
 					<p class="profile-content"><?php echo wp_kses($ekit_team_short_description, \ElementsKit_Lite\Utils::get_kses_array()); ?></p>
@@ -2472,7 +2497,7 @@ class ElementsKit_Widget_Team extends Widget_Base {
 						<?php }?>
 						<div class="hover-area">
 							<div class="profile-body">
-								<h2 class="profile-title">
+								<<?php echo esc_attr( $ekit_team_name_tag ); ?> class="profile-title">
 								<?php if ($settings['ekit_team_chose_popup'] == 'yes') : ?>
 									<a aria-label="<?php echo esc_attr( sprintf( __( 'View %s profile', 'elementskit-lite' ), $ekit_team_name ) ); ?>" href="javascript:void(0)" data-mfp-src="#ekit_team_modal_<?php echo esc_attr($this->get_id() . '_' . get_the_ID()); ?>" class="ekit-team-popup">
 									<?php echo esc_html( $ekit_team_name ); ?>
@@ -2480,7 +2505,7 @@ class ElementsKit_Widget_Team extends Widget_Base {
 									<?php else: ?>
 									<?php echo esc_html( $ekit_team_name ); ?>
 								<?php endif; ?>
-								</h2>
+								</<?php echo esc_attr( $ekit_team_name_tag ); ?>>
 								<p class="profile-designation"><?php echo esc_html( $ekit_team_position ); ?></p>
 								<?php if($ekit_team_show_short_description == 'yes' && $ekit_team_short_description != ''): ?>
 								<p class="profile-content"><?php echo wp_kses($ekit_team_short_description, \ElementsKit_Lite\Utils::get_kses_array()); ?></p>
@@ -2508,7 +2533,7 @@ class ElementsKit_Widget_Team extends Widget_Base {
 							<?php echo wp_kses($image_html, \ElementsKit_Lite\Utils::get_kses_array()); ?>
 						</div><!-- .profile-header END -->
 						<div class="profile-body">
-							<h2 class="profile-title">
+							<<?php echo esc_attr( $ekit_team_name_tag ); ?> class="profile-title">
 							<?php if ($settings['ekit_team_chose_popup'] == 'yes') : ?>
 								<a aria-label="<?php echo esc_attr( sprintf( __( 'View %s profile', 'elementskit-lite' ), $ekit_team_name ) ); ?>" href="javascript:void(0)" data-mfp-src="#ekit_team_modal_<?php echo esc_attr($this->get_id() . '_' . get_the_ID()); ?>" class="ekit-team-popup">
 								<?php echo esc_html( $ekit_team_name ); ?>
@@ -2516,7 +2541,7 @@ class ElementsKit_Widget_Team extends Widget_Base {
 								<?php else: ?>
 								<?php echo esc_html( $ekit_team_name ); ?>
 							<?php endif; ?>
-							</h2>
+							</<?php echo esc_attr( $ekit_team_name_tag ); ?>>
 							<p class="profile-designation"><?php echo esc_html( $ekit_team_position ); ?></p>
 							<?php if($ekit_team_show_short_description == 'yes' && $ekit_team_short_description != ''): ?>
 							<p class="profile-content"><?php echo wp_kses($ekit_team_short_description, \ElementsKit_Lite\Utils::get_kses_array()); ?></p>
@@ -2532,10 +2557,10 @@ class ElementsKit_Widget_Team extends Widget_Base {
 			<?php endif; ?>
 
 		<?php if ( $ekit_team_chose_popup == 'yes' ): ?>
-			<div class="zoom-anim-dialog mfp-hide elementskit-team-popup team-popup-id-<?php echo esc_attr($this->get_id()) ;?>" id="ekit_team_modal_<?php echo esc_attr($this->get_id() . '_' . get_the_ID()); ?>" tabindex="-1" role="dialog" aria-modal="true">
+			<div class="zoom-anim-dialog mfp-hide elementskit-team-popup team-popup-id-<?php echo esc_attr($this->get_id()) ;?>" aria-label="<?php echo esc_attr__( 'Team member details', 'elementskit-lite' ); ?>" id="ekit_team_modal_<?php echo esc_attr($this->get_id() . '_' . get_the_ID()); ?>" tabindex="-1" role="dialog" aria-modal="true">
 				<div class="modal-dialog modal-dialog-centered" role="document">
 					<div class="modal-content">
-						<button type="button" class="ekit-team-modal-close">
+						<button type="button" class="ekit-team-modal-close" aria-label="<?php echo esc_attr__( 'Close', 'elementskit-lite' ); ?>">
 							<?php Icons_Manager::render_icon( $ekit_team_close_icon_changes, ['aria-hidden' => 'true'] ); ?>
 						</button>
 
@@ -2547,7 +2572,7 @@ class ElementsKit_Widget_Team extends Widget_Base {
 							<?php } ?>
 
 							<div class="ekit-team-modal-info<?php echo !empty($image_html) ? ' has-img' : ''; ?>">
-								<h2 class="ekit-team-modal-title"><?php echo esc_html( $ekit_team_name ); ?></h2>
+								<<?php echo esc_attr( $ekit_team_name_tag ); ?> class="ekit-team-modal-title"><?php echo esc_html( $ekit_team_name ); ?></<?php echo esc_attr( $ekit_team_name_tag ); ?>>
 								<p class="ekit-team-modal-position"><?php echo esc_html( $ekit_team_position ); ?></p>
 
 								<div class="ekit-team-modal-content">

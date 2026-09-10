@@ -51,7 +51,14 @@ class Megamenu_Api extends Core\Handler_Api {
 
 	public function get_save_menuitem_settings() {
 		if ( ! $this->current_user_can_save_menuitem_settings() ) {
-			return;
+			// returning null here would leave the REST server with nothing to
+			// encode, and it answers that with a bodyless 200 the browser can
+			// only read as a successful save
+			return new \WP_Error(
+				'ekit_menuitem_settings_forbidden',
+				esc_html__( 'You are not allowed to save these menu item settings.', 'elementskit-lite' ),
+				array( 'status' => rest_authorization_required_code() )
+			);
 		}
 		$settings           = $this->sanitize_menuitem_settings( $this->request['settings'] );
 		$menu_item_id       = $settings['menu_id'];
@@ -66,7 +73,11 @@ class Megamenu_Api extends Core\Handler_Api {
 
 	public function get_get_menuitem_settings() {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			return;
+			return new \WP_Error(
+				'ekit_menuitem_settings_forbidden',
+				esc_html__( 'You are not allowed to read these menu item settings.', 'elementskit-lite' ),
+				array( 'status' => rest_authorization_required_code() )
+			);
 		}
 		$menu_item_id = $this->request['menu_id'];
 

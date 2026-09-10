@@ -187,14 +187,15 @@ if ( ! class_exists( '\Wpmet\Libs\Stories' ) ) :
 				$response = wp_remote_get(
 					$this->api_url . 'cache/stories.json?nocache=' . time(),
 					array(
-						'timeout'     => 10,
-						'httpversion' => '1.1',
+						'timeout'             => 10,
+						'httpversion'         => '1.1',
+						'limit_response_size' => 1024 * 1024,
 					)
 				);
 
-				if ( ! is_wp_error( $response ) && isset( $response['body'] ) && $response['body'] != '' ) {
-					
-					$response = json_decode( $response['body'] );
+				if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) && '' !== wp_remote_retrieve_body( $response ) ) {
+
+					$response = json_decode( wp_remote_retrieve_body( $response ) );
 					
 					if ( ! empty( $response ) ) {
 						$this->data = $response;

@@ -115,6 +115,24 @@ class Enqueue_Scripts {
             [
                 'ajaxurl' => admin_url( 'admin-ajax.php' ),
                 'nonce'   => wp_create_nonce( 'ekit_pro' ),
+                // Strings needed by markup that is built in JS and so cannot use
+                // the PHP translation functions. Consumers must read these
+                // defensively and fall back, since a widget script can run before
+                // this is localized depending on which plugin registers ekit-core.
+                'i18n'    => [
+                    'video_frame'  => __( 'Video player', 'elementskit-lite' ),
+                    'close'        => __( 'Close', 'elementskit-lite' ),
+
+                    // Swiper's A11y module is enabled by default and already names
+                    // the slider controls, but only in hardcoded English. These are
+                    // the same messages, translatable.
+                    'slider_prev'  => __( 'Previous slide', 'elementskit-lite' ),
+                    'slider_next'  => __( 'Next slide', 'elementskit-lite' ),
+                    'slider_first' => __( 'This is the first slide', 'elementskit-lite' ),
+                    'slider_last'  => __( 'This is the last slide', 'elementskit-lite' ),
+                    /* translators: {{index}} is replaced by Swiper with the slide number. Keep it as-is. */
+                    'slider_bullet' => __( 'Go to slide {{index}}', 'elementskit-lite' ),
+                ],
             ]
         );
 
@@ -211,6 +229,8 @@ class Enqueue_Scripts {
 				wp_enqueue_style( $style_handle );
 			}
 		}
+
+		( new Nested_Document_Assets() )->enqueue();
 
 		// RTL styles
 		if ( is_rtl() ) {

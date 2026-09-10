@@ -36,7 +36,8 @@ $widgets_categorized = $reordered_widgets + $remaining;
 // Reorder categories end
 
 // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Checking current page type. The page only can access admin. So nonce verification is not required.
-$widget_css_class = isset( $_GET['ekit-onboard-steps'] ) && $_GET['ekit-onboard-steps'] == 'loaded' ? 'ekit-admin-widgets-container' : 'ekit-admin-widget-list';
+$onboard_step     = isset( $_GET['ekit-onboard-steps'] ) ? sanitize_key( wp_unslash( $_GET['ekit-onboard-steps'] ) ) : '';
+$widget_css_class = 'loaded' === $onboard_step ? 'ekit-admin-widgets-container' : 'ekit-admin-widget-list';
 ?>
 <!-- this blank input is for empty form submission -->
 <input checked="checked" type="checkbox" value="_null" style="display:none" name="widget_list[]" >

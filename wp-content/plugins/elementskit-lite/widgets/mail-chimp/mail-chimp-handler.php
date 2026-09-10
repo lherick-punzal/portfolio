@@ -1,7 +1,8 @@
 <?php
 namespace Elementor;
 
-use ElementsKit_Lite\ElementsKit_Widget_Mail_Chimp_Api;
+defined('ABSPATH') || exit;
+
 use ElementsKit_Lite\Libs\Framework\Attr;
 
 class ElementsKit_Widget_Mail_Chimp_Handler extends \ElementsKit_Lite\Core\Handler_Widget{
@@ -37,7 +38,7 @@ class ElementsKit_Widget_Mail_Chimp_Handler extends \ElementsKit_Lite\Core\Handl
 
 	    require_once $this->get_dir() . 'mail-chimp-api.php';
 
-	    new ElementsKit_Widget_Mail_Chimp_Api();
+	    new \ElementsKit_Lite\Widgets\Mail_Chimp\Mail_Chimp_Api();
     }
 
 

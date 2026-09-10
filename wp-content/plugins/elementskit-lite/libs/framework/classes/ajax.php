@@ -79,7 +79,9 @@ class Ajax {
 			'message' => self::plugin_activate_message( 'setup_configurations' )
 		);
 
-		$plugins = !empty($_POST['our_plugins']) && is_array($_POST['our_plugins']) ? $_POST['our_plugins'] : [];
+		$plugins = ! empty( $_POST['our_plugins'] ) && is_array( $_POST['our_plugins'] )
+			? array_map( 'sanitize_text_field', wp_unslash( $_POST['our_plugins'] ) )
+			: array();
 		if($plugins) {
 			$total_plugins = count($plugins);
 			$total_steps   = 1 + $total_plugins;

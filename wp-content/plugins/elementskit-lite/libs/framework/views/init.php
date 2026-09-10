@@ -127,7 +127,8 @@ $onboard_steps = apply_filters( 'elementskit/admin/onboard_steps/list', $onboard
 
 
  // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Checking current page type. The page only can access admin. So nonce verification is not required.
- $step_css_class = isset($_GET['ekit-onboard-steps']) && $_GET['ekit-onboard-steps'] == 'loaded' ? 'ekit-onboard-dashboard' : '';
+ $onboard_step   = isset( $_GET['ekit-onboard-steps'] ) ? sanitize_key( wp_unslash( $_GET['ekit-onboard-steps'] ) ) : '';
+ $step_css_class = 'loaded' === $onboard_step ? 'ekit-onboard-dashboard' : '';
 ?>
 <div class="ekit-wid-con <?php echo esc_attr( $step_css_class ) ?>">
     <div class="ekit_container">

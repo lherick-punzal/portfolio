@@ -4,7 +4,7 @@
 			<!-- <input type="hidden" name="post_author" value ="<?php //echo get_current_user_id(); ?>"> -->
 			<div class="attr-modal-content">
 				<div class="attr-modal-header">
-					<button type="button" class="attr-close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<button type="button" class="attr-close" data-dismiss="modal" aria-label="<?php echo esc_attr__( 'Close', 'elementskit-lite' ); ?>"><span aria-hidden="true">&times;</span></button>
 					<h4 class="attr-modal-title" id="elementskit_headerfooter_modalLabel"><?php esc_html_e( 'Template Settings', 'elementskit-lite' ); ?></h4>
 				</div>
 				<div class="attr-modal-body" id="elementskit_headerfooter_modal_body">
@@ -27,8 +27,8 @@
 							<label class="attr-input-label"><?php esc_html_e( 'Conditions:', 'elementskit-lite' ); ?></label>
 							<select name="condition_a" class="ekit-template-modalinput-condition_a attr-form-control">
 								<option value="entire_site"><?php esc_html_e( 'Entire Site', 'elementskit-lite' ); ?></option>
-								<option value="singular"><?php esc_html_e( 'Singular (Only Pro)', 'elementskit-lite' ); ?></option>
-								<option value="archive"><?php esc_html_e( 'Archive (Only Pro)', 'elementskit-lite' ); ?></option>
+								<option value="singular" disabled><?php esc_html_e( 'Singular (Only Pro)', 'elementskit-lite' ); ?></option>
+								<option value="archive" disabled><?php esc_html_e( 'Archive (Only Pro)', 'elementskit-lite' ); ?></option>
 							</select>
 						</div>
 						<br>

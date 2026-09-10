@@ -290,16 +290,33 @@ class WPCode_File_Logger {
 	/**
 	 * Get the log directory path while also making sure it exists & we have an index.html and a .htaccess file in it.
 	 *
+	 * The existence checks run once per request for each path, keyed by path so multisite uploads switches stay correct.
+	 *
 	 * @return string
 	 */
 	public static function get_log_dir() {
+		static $ensured = array();
+
 		$uploads = wp_upload_dir();
 
 		$base_path = trailingslashit( $uploads['basedir'] ) . 'wpcode-logs/';
-		if ( ! file_exists( $base_path ) ) {
-			wp_mkdir_p( $base_path );
-			WPCode_File_Cache::create_index_html_file( $base_path );
-			WPCode_File_Cache::create_htaccess_file( $base_path );
+
+		if ( isset( $ensured[ $base_path ] ) ) {
+			return $base_path;
+		}
+		$ensured[ $base_path ] = true;
+
+		wp_mkdir_p( $base_path );
+
+		// Only loaded upfront in admin/cron requests, needed here on any request.
+		if ( ! class_exists( 'WPCode_File_Cache', false ) ) {
+			require_once WPCODE_PLUGIN_PATH . 'includes/class-wpcode-file-cache.php';
+		}
+
+		if ( wp_is_writable( $base_path ) ) {
+			// Both no-op if the file exists; the unslashed path keeps their is_link() check working.
+			WPCode_File_Cache::create_index_html_file( untrailingslashit( $base_path ) );
+			WPCode_File_Cache::create_htaccess_file( untrailingslashit( $base_path ) );
 		}
 
 		return $base_path;

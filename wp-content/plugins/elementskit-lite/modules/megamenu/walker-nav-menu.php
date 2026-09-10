@@ -8,6 +8,18 @@ class ElementsKit_Menu_Walker extends \Walker_Nav_Menu {
 
 	public $menu_Settings;
 
+	/**
+	 * ID of the item most recently opened by start_el().
+	 *
+	 * The walker visits a parent before descending into its children, so this
+	 * holds the parent's ID when start_lvl() runs for that submenu. It lets the
+	 * panel carry an id for the parent link's aria-controls to point at, without
+	 * altering any markup that already existed.
+	 *
+	 * @var int
+	 */
+	private $ekit_parent_item_id = 0;
+
 	// custom methods
 	public function get_item_meta( $menu_item_id ) {
 		$meta_key = Init::$menuitem_settings_key;
@@ -82,8 +94,11 @@ class ElementsKit_Menu_Walker extends \Walker_Nav_Menu {
 	 * @param array  $args   An array of arguments. @see wp_nav_menu()
 	 */
 	public function start_lvl( &$output, $depth = 0, $args = array() ) {
-		$indent  = str_repeat( "\t", $depth );
-		$output .= "\n$indent<ul class=\"elementskit-dropdown elementskit-submenu-panel\">\n";
+		$indent     = str_repeat( "\t", $depth );
+		$submenu_id = $this->ekit_parent_item_id
+			? ' id="ekit-submenu-' . esc_attr( $this->ekit_parent_item_id ) . '"'
+			: '';
+		$output .= "\n$indent<ul class=\"elementskit-dropdown elementskit-submenu-panel\"$submenu_id>\n";
 	}
 	/**
 	 * Ends the list of after the elements are added.
@@ -207,7 +222,7 @@ class ElementsKit_Menu_Walker extends \Walker_Nav_Menu {
 			if(!empty($args->submenu_indicator_icon)) {
 				$submenu_indicator .= $args->submenu_indicator_icon;
 			} else {
-				$submenu_indicator .= '<i class="icon icon-down-arrow1 elementskit-submenu-indicator"></i>';
+				$submenu_indicator .= '<i class="icon icon-down-arrow1 elementskit-submenu-indicator" aria-hidden="true"></i>';
 			}
 		}
 		if ( $depth > 0 ) {
@@ -216,6 +231,24 @@ class ElementsKit_Menu_Walker extends \Walker_Nav_Menu {
 		}
 		if ( in_array( 'current-menu-item', $item->classes ) ) {
 			$atts['class'] .= ' active';
+		}
+
+		// Announce that this link opens a panel, and whether it is currently open.
+		// A mega menu item points at the panel end_el() emits; a plain parent item
+		// points at the <ul> start_lvl() emits. Added before the
+		// nav_menu_link_attributes filter so a theme can still override them.
+		$this->ekit_parent_item_id = $item->ID;
+
+		// end_el() only emits the mega panel at depth 0, so only point at it there —
+		// otherwise aria-controls would reference an id that is never rendered.
+		if ( $is_megamenu_item == true && $depth === 0 ) {
+			$atts['aria-haspopup'] = 'true';
+			$atts['aria-expanded'] = 'false';
+			$atts['aria-controls'] = 'ekit-megamenu-panel-' . $item->ID;
+		} elseif ( in_array( 'menu-item-has-children', $classes ) ) {
+			$atts['aria-haspopup'] = 'true';
+			$atts['aria-expanded'] = 'false';
+			$atts['aria-controls'] = 'ekit-submenu-' . $item->ID;
 		}
 
 		//
@@ -264,7 +297,7 @@ class ElementsKit_Menu_Walker extends \Walker_Nav_Menu {
 			// add menu icon & style
 			if ( $item_meta['menu_icon'] != '' ) {
 				$icon_style   = 'color:' . sanitize_hex_color( $item_meta['menu_icon_color'] );
-				$item_output .= '<i class="ekit-menu-icon ' . esc_attr( $item_meta['menu_icon'] ) . '" style="' . esc_attr( $icon_style ) . '" ></i>';
+				$item_output .= '<i class="ekit-menu-icon ' . esc_attr( $item_meta['menu_icon'] ) . '" style="' . esc_attr( $icon_style ) . '" aria-hidden="true"></i>';
 			}
 		}
 
@@ -307,7 +340,7 @@ class ElementsKit_Menu_Walker extends \Walker_Nav_Menu {
 				if ( $item_meta['menu_enable'] == 1 && class_exists( 'Elementor\Plugin' ) ) {
 					$builder_post_title = 'dynamic-content-megamenu-menuitem' . $item->ID;
 					$builder_post       = Utils::get_page_by_title( $builder_post_title, 'elementskit_content' );
-					$output            .= '<div class="elementskit-megamenu-panel">';
+					$output            .= '<div class="elementskit-megamenu-panel" id="ekit-megamenu-panel-' . esc_attr( $item->ID ) . '">';
 					if ( $builder_post != null ) {
 						$mega_menu_output = \ElementsKit_Lite\Utils::render_elementor_content( $builder_post->ID );
 

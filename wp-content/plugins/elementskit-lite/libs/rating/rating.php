@@ -262,7 +262,14 @@ if ( ! class_exists( 'Wpmet\Libs\Rating' ) ) {
 				return false;
 			}
 
-			$plugin_name = isset($_POST['plugin_name']) ? sanitize_key( $_POST['plugin_name'] ) : '';
+			if ( ! current_user_can( 'manage_options' ) ) {
+				return false;
+			}
+
+			$plugin_name = isset( $_POST['plugin_name'] ) ? sanitize_key( wp_unslash( $_POST['plugin_name'] ) ) : '';
+			if ( '' === $plugin_name ) {
+				return false;
+			}
 			add_option( $plugin_name . '_never_show', 'yes' );
 		}
 
@@ -363,7 +370,14 @@ if ( ! class_exists( 'Wpmet\Libs\Rating' ) ) {
 				return false;
 			}
 
-			$plugin_name = isset($_POST['plugin_name']) ? sanitize_key( $_POST['plugin_name'] ) : '';
+			if ( ! current_user_can( 'manage_options' ) ) {
+				return false;
+			}
+
+			$plugin_name = isset( $_POST['plugin_name'] ) ? sanitize_key( wp_unslash( $_POST['plugin_name'] ) ) : '';
+			if ( '' === $plugin_name ) {
+				return false;
+			}
 			if ( get_option( $plugin_name . '_ask_me_later' ) == false ) {
 				add_option( $plugin_name . '_ask_me_later', 'yes' );
 			} else {

@@ -17,7 +17,10 @@ add_action( 'wpcode_admin_page_content_wpcode-headers-footers', 'wpcode_headers_
  * @return void
  */
 function wpcode_maybe_add_library_connect_notice() {
-	if ( wpcode()->library_auth->has_auth() || ! isset( $_GET['page'] ) || 0 !== strpos( $_GET['page'], 'wpcode' ) ) {  // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+	if ( ! isset( $_GET['page'] ) || 0 !== strpos( $_GET['page'], 'wpcode' ) ) {  // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+		return;
+	}
+	if ( ! isset( wpcode()->library_auth ) || wpcode()->library_auth->has_auth() ) {
 		return;
 	}
 	// Don't show if in headers & footers mode only.

@@ -244,7 +244,7 @@ if ( ! class_exists( '\Wpmet\Libs\Pro_Awareness' ) ) :
 						?>
 						<div class="grid wpmet_pro_a-grid">
 							<div class="wpmet_pro_a-grid-inner">
-								<a target="_blank" href="<?php echo esc_url( $grid['url'] ); ?>"
+								<a target="_blank" rel="noopener noreferrer" href="<?php echo esc_url( $grid['url'] ); ?>"
 								   class="wpmet_pro_a_wrapper" title="<?php echo esc_attr( $grid['title'] ); ?>"
 								   title="<?php echo esc_attr( $grid['title'] ); ?>">
 									<div class="wpmet_pro_a_thumb">
@@ -274,7 +274,7 @@ if ( ! class_exists( '\Wpmet\Libs\Pro_Awareness' ) ) :
 					</div>
 					<div class="wpmet-products__content">
 						<?php foreach ( $this->products as $product ) : ?>
-							<a title="<?php echo esc_attr($product['title']); ?>" class="help-card" href="<?php echo esc_url( $product['url'] ); ?>" target="_blank">
+							<a title="<?php echo esc_attr($product['title']); ?>" class="help-card" href="<?php echo esc_url( $product['url'] ); ?>" target="_blank" rel="noopener noreferrer">
 								<label>
 									<img src="<?php echo esc_url( $product['thumbnail'] ); ?>" alt="Thumbnail">
 								</label>

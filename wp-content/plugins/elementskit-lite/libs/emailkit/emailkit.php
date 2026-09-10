@@ -21,7 +21,10 @@ if( !class_exists('\Wpmet\Libs\Emailkit') ) {
 
 			do_action('edit_with_emailkit_loaded');
 
-			if( empty( $_GET[ 'page' ] ) || 'wc-settings' !== $_GET[ 'page' ] || empty( $_GET[ 'tab' ] ) || 'email' !== $_GET[ 'tab' ] ) {
+			$page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
+			$tab  = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : '';
+
+			if ( 'wc-settings' !== $page || 'email' !== $tab ) {
 				return;
 			}
 

@@ -55,8 +55,8 @@ class Onboard_Status {
 		// finish on-boarding
 		$this->finish_onboard();
 
-		if ( ! empty( $_POST['settings']['newsletter_email'] ) && is_email( $_POST['settings']['newsletter_email'] ) ) {
-			$email = sanitize_email( wp_unslash( $_POST['settings']['newsletter_email'] ) );
+		$email = isset( $_POST['settings']['newsletter_email'] ) ? sanitize_email( wp_unslash( $_POST['settings']['newsletter_email'] ) ) : '';
+		if ( is_email( $email ) ) {
 			$data = array(
 				'email'           => $email,
 				'slug'            => 'elementskit-lite',

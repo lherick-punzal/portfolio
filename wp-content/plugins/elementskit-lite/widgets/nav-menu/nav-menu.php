@@ -1706,7 +1706,7 @@ class ElementsKit_Widget_Nav_Menu extends Widget_Base {
              * Hamburger Toggler Button
              */
             ?>
-            <button class="elementskit-menu-hamburger elementskit-menu-toggler"  type="button" aria-label="hamburger-icon">
+            <button class="elementskit-menu-hamburger elementskit-menu-toggler"  type="button" aria-expanded="false" aria-controls="<?php echo esc_attr( 'ekit-megamenu-' . $settings['elementskit_nav_menu'] ); ?>" aria-label="<?php echo esc_attr__( 'Menu', 'elementskit-lite' ); ?>">
                 <?php
                 /**
                  * Show Default Icon

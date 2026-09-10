@@ -59,10 +59,10 @@ if ( ! class_exists( '\Wpmet\Libs\Banner' ) ) :
 						$instance = \Oxaim\Libs\Notice::instance( 'wpmet-jhanda', $banner_unique_id )
 						->set_dismiss( 'global', ( 3600 * 24 * 15 ) );
 
-						if(method_exists($instance, 'set_style_css') && ! empty( $content->data->style_css )){
-							$instance->set_style_css( $content->data->style_css);
+						if ( method_exists( $instance, 'set_style_css' ) && ! empty( $content->data->style_css ) ) {
+							$instance->set_style_css( $content->data->style_css );
 						}
-					
+
 						if ( $content->type == 'banner' ) {
 							$this->init_banner( $content, $instance);
 						}
@@ -76,19 +76,19 @@ if ( ! class_exists( '\Wpmet\Libs\Banner' ) ) :
 		}
 	
 		private function init_notice( $content, $instance) {
-		
-			$instance->set_message( $content->data->notice_body );
+
+			$instance->set_message( \ElementsKit_Lite\Utils::kses( $content->data->notice_body ) );
 
 			if ( $content->data->notice_image != '' ) {
-				$instance->set_logo( $content->data->notice_image );
+				$instance->set_logo( esc_url_raw( $content->data->notice_image ) );
 			}
 			if ( $content->data->button_text != '' ) {
 				$instance->set_button(
 					array(
 						'default_class' => 'button',
 						'class'         => 'button-secondary button-small', // button-primary button-secondary button-small button-large button-link
-						'text'          => $content->data->button_text,
-						'url'           => $content->data->button_link,
+						'text'          => sanitize_text_field( $content->data->button_text ),
+						'url'           => esc_url_raw( $content->data->button_link ),
 					)
 				);
 			}
@@ -96,11 +96,16 @@ if ( ! class_exists( '\Wpmet\Libs\Banner' ) ) :
 		}
 
 		private function init_banner( $content, $instance) {
-		
-			$html = '<a target="_blank" class="wpmet-jhanda-href" href="' . $content->data->banner_link . '"><img style="display: block;margin: 0 auto;" src="' . $content->data->banner_image . '" /></a>';
+
+			$html = sprintf(
+				'<a target="_blank" rel="noopener noreferrer" class="wpmet-jhanda-href" href="%1$s"><img style="display: block;margin: 0 auto;" src="%2$s" alt=" %3$s " /></a>',
+				esc_url( $content->data->banner_link ),
+				esc_url( $content->data->banner_image ),
+				esc_attr( 'Public Jhanda' )
+			);
 		
 			$instance->set_gutter( false )
-			->set_html( $html )
+			->set_html( \ElementsKit_Lite\Utils::kses( $html ) )
 			->call();
 		}
 
@@ -198,14 +203,15 @@ if ( ! class_exists( '\Wpmet\Libs\Banner' ) ) :
 				$response = wp_remote_get(
 					$this->api_url . '/cache/' . $this->text_domain . '.json?nocache=' . time(),
 					array(
-						'timeout'     => 10,
-						'httpversion' => '1.1',
+						'timeout'             => 10,
+						'httpversion'         => '1.1',
+						'limit_response_size' => 1024 * 1024,
 					)
 				);
 			
-				if ( ! is_wp_error( $response ) && isset( $response['body'] ) && $response['body'] != '' ) {
+				if ( ! is_wp_error( $response ) && 200 === wp_remote_retrieve_response_code( $response ) && '' !== wp_remote_retrieve_body( $response ) ) {
 
-					$response = json_decode( $response['body'] );
+					$response = json_decode( wp_remote_retrieve_body( $response ) );
 
 					if ( ! empty( $response ) ) {
 						$this->data = $response;
