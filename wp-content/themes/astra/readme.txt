@@ -1,20 +1,19 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
-<html><head><meta charset="UTF-8"></head><body><p>=== Astra ===
+=== Astra ===
 Contributors: brainstormforce
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Tags: custom-menu, custom-logo, entertainment, featured-images, full-width-template, one-column, two-columns, left-sidebar, e-commerce, right-sidebar, custom-colors, editor-style, featured-images, full-width-template, microformats, post-formats, rtl-language-support, theme-options, threaded-comments, translation-ready, blog
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 5.3
-Stable tag: 4.13.8
+Stable tag: 4.13.12
 
-Astra is fast, fully customizable &amp; beautiful WordPress theme suitable for blog, personal portfolio, business website and WooCommerce storefront.
+Astra is fast, fully customizable & beautiful WordPress theme suitable for blog, personal portfolio, business website and WooCommerce storefront.
 
 == Description ==
 
-Astra is fast, fully customizable &amp; beautiful WordPress theme suitable for blog, personal portfolio, business website and WooCommerce storefront. It is very lightweight (less than 50KB on frontend) and offers unparalleled speed. Built with SEO in mind, Astra comes with Schema.org code integrated and is Native AMP ready so search engines will love your site.
+Astra is fast, fully customizable & beautiful WordPress theme suitable for blog, personal portfolio, business website and WooCommerce storefront. It is very lightweight (less than 50KB on frontend) and offers unparalleled speed. Built with SEO in mind, Astra comes with Schema.org code integrated and is Native AMP ready so search engines will love your site.
 
-It offers special features and templates so it works perfectly with all page builders like Elementor, Beaver Builder, Visual Composer, SiteOrigin, Divi, etc. Some of the other features: # WooCommerce Ready # Responsive # RTL &amp; Translation Ready # Extendible with premium addons # Regularly updated # Designed, Developed, Maintained &amp; Supported by Brainstorm Force.
+It offers special features and templates so it works perfectly with all page builders like Elementor, Beaver Builder, Visual Composer, SiteOrigin, Divi, etc. Some of the other features: # WooCommerce Ready # Responsive # RTL & Translation Ready # Extendible with premium addons # Regularly updated # Designed, Developed, Maintained & Supported by Brainstorm Force.
 
 Looking for a perfect base theme? Look no further. Astra is fast, fully customizable and WooCommerce ready theme that you can use for building any kind of website!
 
@@ -35,7 +34,7 @@ Astra also provides expert support for free users. A dedicated team of fully tra
 == Installation ==
 
 = From within WordPress =
-1. Visit "Appearance &gt; Themes &gt; Add New"
+1. Visit "Appearance > Themes > Add New"
 2. Search for "Astra"
 3. Install and activate
 
@@ -49,17 +48,17 @@ Underscores is distributed under the terms of the GNU GPL v2 or later.
 
 == Features ==
 
-= Appearance &gt; Widgets =
+= Appearance > Widgets =
 Astra has up to 4 widget area. 1 in your header, 1 for each sidebar and up to 2 in your footer.
 
-= Appearance &gt; Customize =
+= Appearance > Customize =
 	- Site Identity: Hide your site title or tagline, and upload your own header.
 	- Layout: Change things like your container width, header layout, Header width, Custom menu item , sidebar layout and much more.
 	- Set footer layout there is a two footer layout layout 1 and layout 2. layout 1 is stack style and layout 2 is inline.
-	- Blog: Show the full post or excerpt, also show and hide blog post meta &amp; adjust blog post width to default or custom.
+	- Blog: Show the full post or excerpt, also show and hide blog post meta & adjust blog post width to default or custom.
 	- Single post:Set single post meta and adjust width to custom or default.
-	- Colors &amp; background: Choose your default background color, body color, theme color and link color.
-	- Typography: Choose your default body font &amp; set default font size to H1 to H6 tags, Site title, tagline &amp; blog post title on archive page and single page.
+	- Colors & background: Choose your default background color, body color, theme color and link color.
+	- Typography: Choose your default body font & set default font size to H1 to H6 tags, Site title, tagline & blog post title on archive page and single page.
 
 = ASTRA Child Theme =
 
@@ -69,7 +68,7 @@ There are multiple ways you can use a child theme with the Astra Theme, Use any 
 2. More information on creating child theme. - https://developer.wordpress.org/themes/advanced-topics/child-themes/
 
 
-= Screenshot &amp; WP-Preview Starter Content Licenses =
+= Screenshot & WP-Preview Starter Content Licenses =
 
 Screenshot image is a collage of actual sites created using the Astra WordPress Theme.
 
@@ -140,4 +139,3 @@ For more details on YouTube’s data collection, please refer to their Terms of 
 We take plugin security extremely seriously. If you discover a security vulnerability, please report it in a safe and responsible manner.
 
 You can report the issue through our [Bug Bounty Program](https://brainstormforce.com/bug-bounty-program/).
-</p></body></html>

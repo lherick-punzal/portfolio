@@ -841,7 +841,6 @@ if ( ! function_exists( 'astra_get_search_icon' ) ) {
 		 * @param string $device      Device name.
 		 *
 		 * @since 4.8.12
-		 * @psalm-suppress TooManyArguments
 		 */
 		$icon_markup = apply_filters( 'astra_get_search_icon', '', $option, $device );
 
@@ -957,16 +956,30 @@ if ( ! function_exists( 'astra_get_custom_button' ) ) {
 
 		$button_classes    = ( 'theme-button' === $button_style ? 'ast-button' : 'ast-custom-button' );
 		$outside_menu_item = apply_filters( 'astra_convert_link_to_button', $outside_menu );
+		$button_url        = isset( $header_button['url'] ) ? trim( do_shortcode( $header_button['url'] ) ) : '';
+		$button_label      = esc_html( do_shortcode( wp_kses_post( $button_text ) ) );
 
-		if ( '1' == $outside_menu_item ) {
-			$custom_html = '<a class="ast-custom-button-link" href="' . esc_url( do_shortcode( $header_button['url'] ) ) . '" ' . $new_tab . ' ' . $link_rel . ' role="button" aria-label="' . esc_attr( $button_text ) . '">
-				<div class="' . esc_attr( $button_classes ) . '">' . esc_html( do_shortcode( wp_kses_post( $button_text ) ) ) . '</div>
-			</a>';
-		} else {
-			$custom_html  = '<a class="ast-custom-button-link" href="' . esc_url( do_shortcode( $header_button['url'] ) ) . '" ' . $new_tab . ' ' . $link_rel . ' role="button" aria-label="' . esc_attr( $button_text ) . '" >
-				<div class="' . esc_attr( $button_classes ) . '">' . esc_html( do_shortcode( wp_kses_post( $button_text ) ) ) . '</div>
-			</a>';
-			$custom_html .= '<a class="menu-link" href="' . esc_url( do_shortcode( $header_button['url'] ) ) . '" ' . $new_tab . ' ' . $link_rel . '>' . esc_html( do_shortcode( wp_kses_post( $button_text ) ) ) . '</a>';
+		$link_attrs   = '';
+		$button_attrs = '';
+
+		/**
+		 * Filters whether the custom button still renders as a link when no URL is set, true falling back to the previous href="" markup.
+		 *
+		 * @since 4.13.12
+		 * @param bool   $empty_link_enabled Whether to render link attributes without a URL.
+		 * @param string $button_options     Button link option name, e.g. 'header-button1-link-option'.
+		 */
+		if ( '' !== $button_url || apply_filters( 'astra_custom_button_empty_link_enabled', false, $button_options ) ) {
+			$link_attrs   = ' href="' . esc_url( $button_url ) . '" ' . $new_tab . ' ' . $link_rel;
+			$button_attrs = $link_attrs . ' role="button" aria-label="' . esc_attr( $button_text ) . '"';
+		}
+
+		$custom_html = '<a class="ast-custom-button-link"' . $button_attrs . '>
+			<div class="' . esc_attr( $button_classes ) . '">' . $button_label . '</div>
+		</a>';
+
+		if ( '1' != $outside_menu_item ) {
+			$custom_html .= '<a class="menu-link"' . $link_attrs . '>' . $button_label . '</a>';
 		}
 
 		return $custom_html;
@@ -1761,6 +1774,29 @@ if ( ! function_exists( 'astra_comment_form_default_markup' ) ) {
 add_filter( 'comment_form_defaults', 'astra_comment_form_default_markup' );
 
 /**
+ * Excerpt truncation marker
+ */
+if ( ! function_exists( 'astra_excerpt_more_marker' ) ) {
+
+	/**
+	 * Marker appended to a trimmed excerpt, as configured under Post Elements > Excerpt.
+	 *
+	 * An empty option means no marker at all, which is what existing sites have been
+	 * rendering, while new installs default to WordPress's own indicator. Code can
+	 * override it through the astra_get_option_blog-excerpt-marker filter.
+	 *
+	 * @since 4.13.11
+	 * @return string Marker markup, empty when nothing should be appended.
+	 */
+	function astra_excerpt_more_marker() {
+
+		$marker = wp_kses_post( astra_get_i18n_option( 'blog-excerpt-marker', _x( '%astra%', 'Blog / Archive: Excerpt Truncation Marker', 'astra' ) ) );
+
+		return '' === $marker ? '' : ' ' . $marker;
+	}
+}
+
+/**
  * Display Blog Post Excerpt
  */
 if ( ! function_exists( 'astra_the_excerpt' ) ) {
@@ -1781,8 +1817,13 @@ if ( ! function_exists( 'astra_the_excerpt' ) ) {
 				if ( 'full-content' === $excerpt_type ) {
 					the_content();
 				} else {
+					// Render the marker configured under Post Elements > Excerpt instead of WordPress's own.
+					// excerpt_more is applied while the excerpt is generated, so the filter has to be registered
+					// before the_excerpt() runs - added afterwards it only takes effect from the second post onwards.
+					// Removed straight after, so it does not affect excerpts rendered later in the request.
+					add_filter( 'excerpt_more', 'astra_excerpt_more_marker' );
 					the_excerpt();
-					add_filter( 'excerpt_more', '__return_false' );
+					remove_filter( 'excerpt_more', 'astra_excerpt_more_marker' );
 				}
 				?>
 			</div>

@@ -543,6 +543,85 @@ if ( ! function_exists( 'astra_get_options' ) ) {
 }
 
 /**
+ * Return theme options from the database, bypassing option filters.
+ */
+if ( ! function_exists( 'astra_get_raw_options' ) ) {
+
+	/**
+	 * Retrieve the astra-settings option value without `pre_option_` / `option_` filters applied.
+	 *
+	 * Plugins like WPML String Translation filter `option_astra-settings` to replace registered
+	 * admin texts (header/footer HTML, button labels, etc.) with translations for the current
+	 * language. Reading the option through that filter and writing the whole array back would
+	 * permanently save translated strings into the database. Any read-modify-write of the full
+	 * options array must read through this function instead of get_option().
+	 *
+	 * @param mixed $default_value Value to return if the option does not exist.
+	 * @return mixed The stored theme options array, or $default_value if not set.
+	 *
+	 * @since 4.13.9
+	 */
+	function astra_get_raw_options( $default_value = array() ) {
+		$detached      = astra_detach_option_filters();
+		$theme_options = get_option( ASTRA_THEME_SETTINGS, $default_value );
+		astra_restore_option_filters( $detached );
+
+		return $theme_options;
+	}
+}
+
+/**
+ * Detach the astra-settings option filters.
+ */
+if ( ! function_exists( 'astra_detach_option_filters' ) ) {
+
+	/**
+	 * Detach all `pre_option_` / `option_` filters registered for astra-settings.
+	 *
+	 * @return array Detached hooks, keyed by hook name. Pass to astra_restore_option_filters().
+	 *
+	 * @since 4.13.9
+	 */
+	function astra_detach_option_filters() {
+		global $wp_filter;
+
+		$hooks    = array( 'pre_option_' . ASTRA_THEME_SETTINGS, 'option_' . ASTRA_THEME_SETTINGS );
+		$detached = array();
+
+		foreach ( $hooks as $hook ) {
+			if ( isset( $wp_filter[ $hook ] ) ) {
+				$detached[ $hook ] = $wp_filter[ $hook ];
+				unset( $wp_filter[ $hook ] );
+			}
+		}
+
+		return $detached;
+	}
+}
+
+/**
+ * Restore previously detached astra-settings option filters.
+ */
+if ( ! function_exists( 'astra_restore_option_filters' ) ) {
+
+	/**
+	 * Re-attach option filters detached via astra_detach_option_filters().
+	 *
+	 * @param array $detached Detached hooks, keyed by hook name.
+	 * @return void
+	 *
+	 * @since 4.13.9
+	 */
+	function astra_restore_option_filters( $detached ) {
+		global $wp_filter;
+
+		foreach ( $detached as $hook => $callbacks ) {
+			$wp_filter[ $hook ] = $callbacks; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Restoring the filters detached in astra_detach_option_filters().
+		}
+	}
+}
+
+/**
  * Return Theme option.
  */
 if ( ! function_exists( 'astra_get_option' ) ) {
@@ -665,7 +744,7 @@ if ( ! function_exists( 'astra_update_option' ) ) {
 		do_action( "astra_before_update_option_{$option}", $value, $option );
 
 		// Get all customizer options.
-		$theme_options = get_option( ASTRA_THEME_SETTINGS );
+		$theme_options = astra_get_raw_options();
 
 		// Update value in options array.
 		if ( ! is_array( $theme_options ) ) {
@@ -692,7 +771,7 @@ if ( ! function_exists( 'astra_delete_option' ) ) {
 		do_action( "astra_before_delete_option_{$option}", $option );
 
 		// Get all customizer options.
-		$theme_options = get_option( ASTRA_THEME_SETTINGS );
+		$theme_options = astra_get_raw_options();
 
 		// Update value in options array.
 		unset( $theme_options[ $option ] );
@@ -759,7 +838,7 @@ if ( ! function_exists( 'astra_get_post_id' ) ) {
 	 * Get post ID.
 	 *
 	 * @param  string $post_id_override Get override post ID.
-	 * @return number                   Post ID.
+	 * @return int                      Post ID.
 	 */
 	function astra_get_post_id( $post_id_override = '' ) {
 
@@ -772,6 +851,7 @@ if ( ! function_exists( 'astra_get_post_id' ) ) {
 				$post_id = get_option( 'page_for_posts' );
 			} elseif (
 				function_exists( 'wc_get_page_id' ) &&
+				! is_search() &&
 				(
 					( function_exists( 'is_shop' ) && is_shop() ) ||
 					( function_exists( 'is_product_category' ) && is_product_category() ) ||
@@ -2331,5 +2411,82 @@ if ( ! function_exists( 'astra_flip_rtl_alignment' ) ) {
 			default:
 				return $alignment;
 		}
+	}
+}
+
+if ( ! function_exists( 'astra_get_html_widget_allowed_tags' ) ) {
+	/**
+	 * Allowed HTML tags for Header/Footer Builder HTML widget content.
+	 *
+	 * @param bool   $allow_iframe Whether to allow <iframe>.
+	 * @param string $content      Content being filtered, passed on to the filter.
+	 * @return array Allowed HTML tags and attributes.
+	 * @since 4.13.11
+	 */
+	function astra_get_html_widget_allowed_tags( $allow_iframe = true, $content = '' ) {
+
+		$allowed_html = wp_kses_allowed_html( 'post' );
+
+		// Add here additional tags that weren't working if you got something.
+		$additional_tags = array(
+			'select'   => array(
+				'name'     => true,
+				'id'       => true,
+				'class'    => true,
+				'multiple' => true,
+				'size'     => true,
+				'required' => true,
+				'disabled' => true,
+				'style'    => true,
+			),
+			'option'   => array(
+				'value'    => true,
+				'selected' => true,
+				'disabled' => true,
+				'class'    => true,
+				'id'       => true,
+			),
+			'optgroup' => array(
+				'label'    => true,
+				'disabled' => true,
+				'class'    => true,
+			),
+		);
+
+		if ( $allow_iframe ) {
+			$additional_tags['iframe'] = array(
+				'src'             => true,
+				'width'           => true,
+				'height'          => true,
+				'frameborder'     => true,
+				'allowfullscreen' => true,
+				'style'           => true,
+				'title'           => true,
+				'loading'         => true,
+				'referrerpolicy'  => true,
+				'sandbox'         => true,
+				'class'           => true,
+				'id'              => true,
+			);
+		}
+
+		$allowed_html = array_merge( $allowed_html, $additional_tags );
+
+		/**
+		 * Filter allowed HTML tags for HTML widget content.
+		 *
+		 * @param array $allowed_html Array of allowed HTML tags and attributes.
+		 * @param string $content The HTML content being filtered.
+		 * @param bool $allow_iframe Whether <iframe> is allowed for this caller.
+		 * @since 4.11.11
+		 */
+		$allowed_html = apply_filters( 'astra_html_widget_allowed_html', $allowed_html, $content, $allow_iframe );
+
+		// The gate stays authoritative: a filter callback cannot re-add <iframe> for an author without unfiltered_html.
+		if ( ! $allow_iframe ) {
+			unset( $allowed_html['iframe'] );
+		}
+
+		return $allowed_html;
 	}
 }

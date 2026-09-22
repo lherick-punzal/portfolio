@@ -40,6 +40,11 @@ if ( ! class_exists( 'Astra_Builder_UI_Controller' ) ) {
 				self::$ast_svgs = apply_filters( 'astra_svg_icons', self::$ast_svgs );
 			}
 
+			// Slugs renamed in 4.13.11 gained a "-logo" suffix; fall back so saved values still resolve.
+			if ( ! isset( self::$ast_svgs[ $icon ] ) && isset( self::$ast_svgs[ $icon . '-logo' ] ) ) {
+				$icon .= '-logo';
+			}
+
 			$output .= isset( self::$ast_svgs[ $icon ] ) ? self::$ast_svgs[ $icon ] : '';
 			$output .= '</span>';
 
@@ -97,8 +102,6 @@ if ( ! class_exists( 'Astra_Builder_UI_Controller' ) ) {
 						 * @param array  $item Social icon item.
 						 *
 						 * @since 4.8.10
-						 *
-						 * @psalm-suppress TooManyArguments
 						 */
 						$rel = apply_filters( 'astra_social_icon_attribute_rel', 'noopener noreferrer', $item );
 
@@ -161,60 +164,8 @@ if ( ! class_exists( 'Astra_Builder_UI_Controller' ) ) {
 				// First applying wpautop to handle paragraphs, then removing extra <p> around shortcodes.
 				$content = shortcode_unautop( wpautop( $content ) );
 
-				$allowed_html = wp_kses_allowed_html( 'post' );
-
-				// Add here additional tags that weren't working if you got something.
-				$additional_tags = array(
-					'select'   => array(
-						'name'     => true,
-						'id'       => true,
-						'class'    => true,
-						'multiple' => true,
-						'size'     => true,
-						'required' => true,
-						'disabled' => true,
-						'style'    => true,
-					),
-					'option'   => array(
-						'value'    => true,
-						'selected' => true,
-						'disabled' => true,
-						'class'    => true,
-						'id'       => true,
-					),
-					'optgroup' => array(
-						'label'    => true,
-						'disabled' => true,
-						'class'    => true,
-					),
-					'iframe'   => array(
-						'src'             => true,
-						'width'           => true,
-						'height'          => true,
-						'frameborder'     => true,
-						'allowfullscreen' => true,
-						'style'           => true,
-						'title'           => true,
-						'loading'         => true,
-						'referrerpolicy'  => true,
-						'sandbox'         => true,
-						'class'           => true,
-						'id'              => true,
-					),
-				);
-
-				$allowed_html = array_merge( $allowed_html, $additional_tags );
-
-				/**
-				 * Filter allowed HTML tags for HTML widget content.
-				 *
-				 * @param array $allowed_html Array of allowed HTML tags and attributes.
-				 * @param string $content The HTML content being filtered.
-				 * @since 4.11.11
-				 *
-				 * @psalm-suppress TooManyArguments
-				 */
-				$allowed_html = apply_filters( 'astra_html_widget_allowed_html', $allowed_html, $content );
+				// Iframes stay allowed here so embeds an unfiltered_html author already stored keep rendering.
+				$allowed_html = astra_get_html_widget_allowed_tags( true, $content );
 
 				// Shield shortcodes from wp_kses(): a raw shortcode used as an attribute value (e.g.
 				// href="[acf ...]") is stripped as invalid markup before it can expand. Expand each
@@ -484,31 +435,29 @@ if ( ! class_exists( 'Astra_Builder_UI_Controller' ) ) {
 
 					$logged_in_text = astra_get_i18n_option( 'header-account-logged-in-text', _x( '%astra%', 'Header Builder: Account Widget - Logged In View Text', 'astra' ) );
 
+					$switch_to_default = true;
 					if ( 'default' !== $account_type && 'default' === $link_type && defined( 'ASTRA_EXT_VER' ) ) {
-						$new_tab = 'target=_self';
+						$new_tab = 'target="_self"';
 						if ( 'woocommerce' === $account_type && class_exists( 'WooCommerce' ) ) {
-
-							$woocommerce_link = get_permalink( get_option( 'woocommerce_myaccount_page_id' ) );
-
-							$link_url = $woocommerce_link ? $woocommerce_link : '';
+							$woocommerce_link  = get_permalink( get_option( 'woocommerce_myaccount_page_id' ) );
+							$link_url          = $woocommerce_link ? $woocommerce_link : '';
+							$switch_to_default = false;
 
 						} elseif ( 'lifterlms' === $account_type && class_exists( 'LifterLMS' ) ) {
-
-							$lifterlms_link = get_permalink( llms_get_page_id( 'myaccount' ) );
-
-							$link_url = $lifterlms_link ? $lifterlms_link : '';
+							$lifterlms_link    = get_permalink( llms_get_page_id( 'myaccount' ) );
+							$link_url          = $lifterlms_link ? $lifterlms_link : '';
+							$switch_to_default = false;
 						}
-					} elseif ( '' !== $account_link && '' !== $account_link['url'] ) {
+					}
 
+					if ( $switch_to_default && '' !== $account_link && '' !== $account_link['url'] ) {
 						$link_url = $account_link['url'];
-
-						$new_tab = ( $account_link['new_tab'] ? 'target=_blank' : 'target=_self' );
-
-						$link_rel = ( ! empty( $account_link['link_rel'] ) ? 'rel=' . esc_attr( $account_link['link_rel'] ) : '' );
+						$new_tab  = $account_link['new_tab'] ? 'target="_blank"' : 'target="_self"';
+						$link_rel = ! empty( $account_link['link_rel'] ) ? 'rel="' . esc_attr( $account_link['link_rel'] ) . '"' : '';
 					}
 
 					if ( $action_type === 'link' || 'hover' === $show_menu ) {
-						$link_href = '' !== $link_url ? 'href=' . esc_url( $link_url ) : '';
+						$link_href = '' !== $link_url ? 'href="' . esc_url( $link_url ) . '"' : '';
 					}
 					$role = $action_type === 'link' ? 'link' : 'button';
 
@@ -531,7 +480,12 @@ if ( ! class_exists( 'Astra_Builder_UI_Controller' ) ) {
 
 					?>
 					<div class="ast-header-account-inner-wrap">
-						<a class="<?php echo esc_attr( implode( ' ', $link_classes ) ); ?>" role="<?php echo esc_attr( $role ); ?>" aria-label="<?php esc_attr_e( 'Account icon link', 'astra' ); ?>" <?php echo esc_attr( $link_href . ' ' . $new_tab . ' ' . $link_rel ); ?> >
+						<a
+							class="<?php echo esc_attr( implode( ' ', $link_classes ) ); ?>"
+							role="<?php echo esc_attr( $role ); ?>"
+							aria-label="<?php esc_attr_e( 'Account icon link', 'astra' ); ?>"
+							<?php echo $link_href . ' ' . $new_tab . ' ' . $link_rel; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Each attribute is individually escaped above with esc_url()/esc_attr() or is a hardcoded literal. ?>
+						>
 
 							<?php
 							if ( 'avatar' === $login_profile_type ) {
@@ -594,14 +548,17 @@ if ( ! class_exists( 'Astra_Builder_UI_Controller' ) ) {
 						}
 
 						$link_url = $login_link['url'];
-						$new_tab  = ( $login_link['new_tab'] ? 'target=_blank' : 'target=_self' );
-
-						$link_rel = ( ! empty( $login_link['link_rel'] ) ? 'rel=' . esc_attr( $login_link['link_rel'] ) : '' );
+						$new_tab  = $login_link['new_tab'] ? 'target="_blank"' : 'target="_self"';
+						$link_rel = ! empty( $login_link['link_rel'] ) ? 'rel="' . esc_attr( $login_link['link_rel'] ) . '"' : '';
 					}
 
-					$link_href = 'href=' . esc_url( $link_url ) . '';
+					$link_href = 'href="' . esc_url( $link_url ) . '"';
 					?>
-					<a class="<?php echo esc_attr( implode( ' ', $logged_out_style_class ) ); ?>" aria-label="<?php esc_attr_e( 'Account icon link', 'astra' ); ?>" <?php echo esc_attr( $link_href . ' ' . $new_tab . ' ' . $link_rel ); ?> >
+					<a
+						class="<?php echo esc_attr( implode( ' ', $logged_out_style_class ) ); ?>"
+						aria-label="<?php esc_attr_e( 'Account icon link', 'astra' ); ?>"
+						<?php echo $link_href . ' ' . $new_tab . ' ' . $link_rel; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Each attribute is individually escaped above with esc_url()/esc_attr() or is a hardcoded literal. ?>
+					>
 						<?php if ( 'icon' === $logged_out_style ) { ?>
 							<?php echo self::fetch_svg_icon( $icon_skin ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 							<?php

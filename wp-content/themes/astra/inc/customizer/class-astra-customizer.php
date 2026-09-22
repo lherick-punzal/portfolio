@@ -108,6 +108,14 @@ if ( ! class_exists( 'Astra_Customizer' ) ) {
 		public static $customizer_footer_configs = array();
 
 		/**
+		 * Option filters detached while the customizer saves settings.
+		 *
+		 * @since 4.13.9
+		 * @var array
+		 */
+		private $detached_option_filters = array();
+
+		/**
 		 * Initiator
 		 */
 		public static function get_instance() {
@@ -157,6 +165,19 @@ if ( ! class_exists( 'Astra_Customizer' ) ) {
 			 */
 			return apply_filters( 'astra_is_astra_customizer', true );
 		}
+
+		/**
+		 * Whether this request needs the Customizer configurations registered.
+		 *
+		 * Includes WP-Cron and WP-CLI, where core publishes scheduled changesets.
+		 *
+		 * @since 4.13.12
+		 * @return bool
+		 */
+		public static function is_customizer_context() {
+			return is_admin() || is_customize_preview() || wp_doing_cron() || ( defined( 'WP_CLI' ) && WP_CLI );
+		}
+
 		/**
 		 * Constructor
 		 */
@@ -165,7 +186,8 @@ if ( ! class_exists( 'Astra_Customizer' ) ) {
 			add_action( 'astra_style_guide_site_icon', array( $this, 'site_icon_update' ) );
 
 			// Hooks that are necessary even if it is not Astra's customizer.
-			if ( is_admin() || is_customize_preview() ) {
+			if ( self::is_customizer_context() ) {
+				add_action( 'customize_register', array( $this, 'include_config_base' ), 1 );
 				add_action( 'customize_register', array( $this, 'include_configurations' ), 2 );
 				add_action( 'customize_register', array( $this, 'astra_pro_upgrade_configurations' ), 2 );
 			}
@@ -181,7 +203,7 @@ if ( ! class_exists( 'Astra_Customizer' ) ) {
 			 */
 			add_action( 'customize_preview_init', array( $this, 'preview_init' ) );
 
-			if ( is_admin() || is_customize_preview() ) {
+			if ( self::is_customizer_context() ) {
 				add_action( 'customize_register', array( $this, 'prepare_customizer_javascript_configs' ) );
 				add_action( 'customize_register', array( $this, 'prepare_group_configs' ), 9 );
 
@@ -202,6 +224,14 @@ if ( ! class_exists( 'Astra_Customizer' ) ) {
 
 			add_action( 'customize_register', array( $this, 'customize_register' ) );
 			add_action( 'customize_register', array( $this, 'customize_register_site_icon' ), 20 );
+			// WP_Customize_Setting snapshots the astra-settings root value when settings are constructed
+			// during customize_register (aggregate_multidimensional) and saves from that snapshot, so on
+			// save requests the option filters must be detached before registration — customize_save is too late.
+			if ( isset( $_POST['action'] ) && 'customize_save' === $_POST['action'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Request detection only, core verifies the nonce before saving.
+				add_action( 'customize_register', array( $this, 'detach_option_filters' ), 0 );
+			}
+			add_action( 'customize_save', array( $this, 'detach_option_filters' ), 1 );
+			add_action( 'customize_save_after', array( $this, 'restore_option_filters' ), 999 );
 			add_action( 'customize_save_after', array( $this, 'customize_save' ) );
 			add_action( 'customize_save_after', array( $this, 'delete_cached_partials' ) );
 			add_action( 'wp_head', array( $this, 'preview_styles' ) );
@@ -1310,6 +1340,16 @@ if ( ! class_exists( 'Astra_Customizer' ) ) {
 		}
 
 		/**
+		 * Include the Customizer configuration base class.
+		 *
+		 * @since 4.13.12
+		 * @return void
+		 */
+		public function include_config_base() {
+			require_once ASTRA_THEME_DIR . 'inc/customizer/configurations/class-astra-customizer-config-base.php'; // phpcs:ignore WPThemeReview.CoreFunctionality.FileInclude.FileIncludeFound -- Config base class every config loader extends; loaded on customize_register priority 1 so it exists before the priority 2 loaders run.
+		}
+
+		/**
 		 * Include Customizer Configuration files.
 		 *
 		 * @since 1.4.3
@@ -1317,7 +1357,7 @@ if ( ! class_exists( 'Astra_Customizer' ) ) {
 		 */
 		public function include_configurations() {
 			// @codingStandardsIgnoreStart WPThemeReview.CoreFunctionality.FileInclude.FileIncludeFound
-			require ASTRA_THEME_DIR . 'inc/customizer/configurations/class-astra-customizer-config-base.php';
+			$this->include_config_base();
 
 			/**
 			 * Register Sections & Panels
@@ -1972,6 +2012,33 @@ if ( ! class_exists( 'Astra_Customizer' ) ) {
 		}
 
 		/**
+		 * Detach astra-settings option filters before the customizer saves settings.
+		 *
+		 * Plugins like WPML String Translation filter `option_astra-settings` to swap admin texts
+		 * with translations. The customizer merges changed settings into the filtered array and
+		 * saves it, which would permanently store translated strings in the database.
+		 *
+		 * @return void
+		 *
+		 * @since 4.13.9
+		 */
+		public function detach_option_filters() {
+			$this->detached_option_filters = array_merge( $this->detached_option_filters, astra_detach_option_filters() );
+		}
+
+		/**
+		 * Restore the astra-settings option filters detached before the customizer save.
+		 *
+		 * @return void
+		 *
+		 * @since 4.13.9
+		 */
+		public function restore_option_filters() {
+			astra_restore_option_filters( $this->detached_option_filters );
+			$this->detached_option_filters = array();
+		}
+
+		/**
 		 * Called by the customize_save_after action to refresh
 		 * the cached CSS when Customizer settings are saved.
 		 *
@@ -2140,9 +2207,10 @@ if ( ! class_exists( 'Astra_Customizer' ) ) {
  * (customize_*, wp_ajax_*, astra_style_guide_site_icon). None fire on pure frontend
  * requests, so skip instantiation there. Static utilities on the class (e.g.
  * generate_logo_by_width(), is_astra_customizer(), logo_image_sizes()) remain
- * available because they don't require the instance.
+ * available because they don't require the instance. WP-Cron and WP-CLI are included
+ * because customize_register also fires there, when core publishes a scheduled changeset.
  */
-if ( is_admin() || is_customize_preview() ) {
+if ( Astra_Customizer::is_customizer_context() ) {
 	Astra_Customizer::get_instance();
 }
 
