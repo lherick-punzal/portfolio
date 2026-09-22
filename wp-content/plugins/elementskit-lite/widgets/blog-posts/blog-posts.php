@@ -118,7 +118,7 @@ class ElementsKit_Widget_Blog_Posts extends Widget_Base
             ]
         );
 
-        $this->add_control(
+        $this->add_responsive_control(
             'ekit_blog_posts_layout_style_thumb',
             [
                 'label'     => esc_html__('Image Position', 'elementskit-lite'),

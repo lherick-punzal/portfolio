@@ -83,6 +83,24 @@ class ElementsKit_Menu_Walker extends \Walker_Nav_Menu {
 	}
 
 	/**
+	 * Whether the menu is being rendered for the Elementor editor.
+	 *
+	 * Covers both the preview iframe and the `render_widget` ajax call Elementor
+	 * uses to re-render PHP widgets while editing - that ajax call sets edit mode
+	 * explicitly, and any style it enqueues is thrown away with the request.
+	 *
+	 * @return bool
+	 */
+	public function is_elementor_editor_render() {
+		if ( ! class_exists( 'Elementor\Plugin' ) ) {
+			return false;
+		}
+
+		return \Elementor\Plugin::$instance->editor->is_edit_mode()
+			|| \Elementor\Plugin::$instance->preview->is_preview_mode();
+	}
+
+	/**
 	 * Starts the list before the elements are added.
 	 *
 	 * @see Walker::start_lvl()
@@ -241,8 +259,9 @@ class ElementsKit_Menu_Walker extends \Walker_Nav_Menu {
 
 		// end_el() only emits the mega panel at depth 0, so only point at it there —
 		// otherwise aria-controls would reference an id that is never rendered.
+		// No aria-haspopup: the panel holds arbitrary content, not a menu, so it
+		// is announced as a disclosure (expanded/collapsed) instead.
 		if ( $is_megamenu_item == true && $depth === 0 ) {
-			$atts['aria-haspopup'] = 'true';
 			$atts['aria-expanded'] = 'false';
 			$atts['aria-controls'] = 'ekit-megamenu-panel-' . $item->ID;
 		} elseif ( in_array( 'menu-item-has-children', $classes ) ) {
@@ -344,8 +363,12 @@ class ElementsKit_Menu_Walker extends \Walker_Nav_Menu {
 					if ( $builder_post != null ) {
 						$mega_menu_output = \ElementsKit_Lite\Utils::render_elementor_content( $builder_post->ID );
 
-						// if ajax load is enable and not elementor editor mode
-						if(!empty($item_meta['megamenu_ajax_load']) && $item_meta['megamenu_ajax_load'] == 'yes') {
+						// if ajax load is enable and not elementor editor mode.
+						// Inside the editor the panel is fetched over REST, and the
+						// panel CSS this render produces would be discarded with it,
+						// so the panel would come back unstyled - keep it inline there.
+						if ( ! empty( $item_meta['megamenu_ajax_load'] ) && $item_meta['megamenu_ajax_load'] == 'yes'
+							&& ! $this->is_elementor_editor_render() ) {
 							$mega_menu_output = sprintf('<div class="megamenu-ajax-load" data-id="%1$s"></div>', $builder_post->ID);
 						}
 
