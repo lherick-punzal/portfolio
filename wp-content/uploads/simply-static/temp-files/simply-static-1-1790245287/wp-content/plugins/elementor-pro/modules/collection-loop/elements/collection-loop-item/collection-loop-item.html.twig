@@ -1,0 +1,6 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html><head><meta charset="UTF-8"></head><body><p>{% import 'elementor/macros' as m %}
+</p><div class="{{ m.render_base_classes(id, base_styles, settings) }} {{ editor_classes | default('') }}" role="listitem" m.render_data_attributes type interaction_id m.render_custom_attributes editor_attributes>
+    <!-- elementor-children-placeholder -->
+</div>
+</body></html>

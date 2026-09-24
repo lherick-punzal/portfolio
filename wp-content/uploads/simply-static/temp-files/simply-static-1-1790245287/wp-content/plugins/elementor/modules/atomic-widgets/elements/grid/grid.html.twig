@@ -1,0 +1,13 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html><head><meta charset="UTF-8"></head><body><p>{% import 'elementor/macros' as m %}
+{%- set tag = settings.tag | default('div') -%}
+{%- if settings.link is defined and settings.link.href is defined and settings.link.href is not empty -%}
+    {%- set tag = settings.link.tag | default('a') -%}
+{%- endif -%}
+&lt;{{ tag }} class="{{ m.render_base_classes(id, base_styles, settings) }} {{ editor_classes | default('') }}"
+    {{- ' ' }}{{ m.render_data_attributes(id, type, interaction_id) }}
+    {{- m.render_link_attributes(settings.link | default(null)) }}
+    {{- m.render_custom_attributes(settings, editor_attributes) }}&gt;
+    <!-- elementor-children-placeholder -->
+{{ tag }}&gt;
+</p></body></html>

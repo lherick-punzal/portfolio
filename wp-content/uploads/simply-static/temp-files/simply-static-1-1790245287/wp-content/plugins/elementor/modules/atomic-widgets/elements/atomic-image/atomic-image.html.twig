@@ -1,0 +1,13 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html><head><meta charset="UTF-8"></head><body><p>{% import 'elementor/macros' as m %}
+{%- set has_link = settings.link is defined and settings.link.href is defined and settings.link.href is not empty -%}
+{%- if has_link -%}
+	&lt;{{ settings.link.tag | default('a') | e('html_tag') }}
+		{{- m.render_link_attributes(settings.link) }} class="{{ base_styles['link-base'] }}" data-interaction-id="{{ interaction_id }}"
+	&gt;
+{%- endif %}
+<img class="{{ base_styles['base'] }} {{ settings.classes | join(' ') }}" if not has_link data-interaction-id="{{ interaction_id }}" endif m.render_custom_attributes for attr value in settings.image src="https://lherick-punzal.github.io/portfolio/wp-content/plugins/elementor/modules/atomic-widgets/elements/atomic-image/value-efull_url" else e endfor>
+{%- if has_link %}
+	{{ settings.link.tag | default('a') | e('html_tag') }}&gt;
+{%- endif %}
+</p></body></html>

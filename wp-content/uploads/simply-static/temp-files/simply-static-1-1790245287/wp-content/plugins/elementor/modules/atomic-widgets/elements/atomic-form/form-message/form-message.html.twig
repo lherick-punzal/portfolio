@@ -1,0 +1,8 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html><head><meta charset="UTF-8"></head><body><p>{%- set classes = ['e-con', 'e-atomic-element', base_styles.base] | merge(settings.classes | default([])) | join(' ') %}
+{%- set message_type = type == 'e-form-success-message' ? 'message-success' : 'message-error' %}
+{%- set aria_attr = type == 'e-form-success-message' ? 'aria-live="polite"'  : 'role="alert"' %}
+</p><div class="{{ classes }} {{ message_type }} {{ editor_classes | default('') }}" tabindex="-1" data-id="{{ id }}" data-element_type="{{ type }}" data-e-type="{{ type }}" data-interaction-id="{{ interaction_id }}" aria_attr raw editor_attributes default>
+    <!-- elementor-children-placeholder -->
+</div>
+</body></html>

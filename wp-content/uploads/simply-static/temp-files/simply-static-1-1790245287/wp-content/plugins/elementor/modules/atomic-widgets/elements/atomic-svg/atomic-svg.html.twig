@@ -1,0 +1,10 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html><head><meta charset="UTF-8"></head><body><p>{% import 'elementor/macros' as m %}
+{%- set classes = settings.classes | merge([base_styles.base]) | join(' ') -%}
+{%- if settings.link is defined and settings.link.href is defined and settings.link.href is not empty -%}
+	&lt;{{ settings.link.tag | default('a') | e('html_tag') }}{{ m.render_link_attributes(settings.link) }} class="{{ classes }}" data-interaction-id="{{ interaction_id }}"
+		{{- m.render_custom_attributes(settings) }}&gt;{{ settings.svg.html | raw }}{{ settings.link.tag | default('a') | e('html_tag') }}&gt;
+{%- else -%}
+	</p><div class="{{ classes }}" data-interaction-id="{{ interaction_id }}" m.render_custom_attributes>{{ settings.svg.html | raw }}</div>
+{%- endif -%}
+</body></html>
