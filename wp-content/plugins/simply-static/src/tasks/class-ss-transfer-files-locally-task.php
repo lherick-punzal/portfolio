@@ -90,7 +90,14 @@ class Transfer_Files_Locally_Task extends Task {
 			// If this is a 404-only export, ensure the activity/export log reflects a single transferred file.
 			$only_404 = get_option( 'simply-static-404-only' );
 			if ( ! empty( $only_404 ) ) {
-				$this->save_status_message( sprintf( __( 'Transferred %d of %d files', 'simply-static' ), 1, 1 ) );
+				$this->save_status_message(
+					sprintf(
+						/* translators: 1: number of files transferred, 2: total number of files. */
+						__( 'Transferred %1$d of %2$d files', 'simply-static' ),
+						1,
+						1
+					)
+				);
 			}
 
 			do_action( 'ss_finished_transferring_files_locally', $this->destination_dir );
@@ -112,6 +119,13 @@ class Transfer_Files_Locally_Task extends Task {
 	}
 
 	public function maybe_create_local_directory() {
+		if ( ! is_string( $this->destination_dir ) || ! Util::is_path_allowed_by_open_basedir( $this->destination_dir ) ) {
+			Util::debug_log( 'Local destination directory is outside the paths allowed by open_basedir: ' . (string) $this->destination_dir );
+			$this->save_status_message( 'Unable to access destination directory: ' . (string) $this->destination_dir );
+
+			return false;
+		}
+
 		if ( is_dir( $this->destination_dir ) ) {
 			return true;
 		}
@@ -140,7 +154,12 @@ class Transfer_Files_Locally_Task extends Task {
 			return __( 'No new/updated pages to transfer', 'simply-static' );
 		}
 
-		return sprintf( __( "Transferred %d of %d files", 'simply-static' ), $processed, $total );
+		return sprintf(
+			/* translators: 1: number of files transferred, 2: total number of files. */
+			__( 'Transferred %1$d of %2$d files', 'simply-static' ),
+			$processed,
+			$total
+		);
 	}
 
 	/**

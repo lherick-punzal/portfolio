@@ -47,28 +47,36 @@ class Diagnostic {
 
 	public function __construct() {
 		$this->options = Options::instance();
+		$sections      = array(
+			'urls'       => __( 'URLs', 'simply-static' ),
+			'server'     => __( 'Server', 'simply-static' ),
+			'wordpress'  => __( 'WordPress', 'simply-static' ),
+			'plugins'    => __( 'Plugins', 'simply-static' ),
+			'filesystem' => __( 'Filesystem', 'simply-static' ),
+			'mysql'      => __( 'MySQL', 'simply-static' ),
+		);
 
 		$this->checks = array(
-			'URLs'       => array(),
-			'Server'     => array(
+			$sections['urls']       => array(),
+			$sections['server']     => array(
 				__( 'PHP Version', 'simply-static' ) => $this->php_version(),
 				__( 'Basic Auth', 'simply-static' )  => $this->check_basic_auth_status(),
 				__( 'php-xml', 'simply-static' )     => $this->is_xml_active(),
 				__( 'cURL', 'simply-static' )        => $this->has_curl(),
-				__( 'Docker', 'simply-static' ) => $this->docker_environment_check(),
+				__( 'Docker', 'simply-static' )      => $this->docker_environment_check(),
 			),
-			'WordPress'  => array(
+			$sections['wordpress']  => array(
 				__( 'Permalinks', 'simply-static' ) => $this->is_permalink_structure_set(),
 				__( 'Indexable', 'simply-static' )  => $this->is_set_to_index(),
 				__( 'Caching', 'simply-static' )    => $this->is_cache_set(),
 				__( 'WP-CRON', 'simply-static' )    => $this->is_wp_cron_running(),
 			),
-			'Plugins'    => array(),
-			'Filesystem' => array(
+			$sections['plugins']    => array(),
+			$sections['filesystem'] => array(
 				__( 'Temp dir readable', 'simply-static' )  => $this->is_temp_files_dir_readable(),
-				__( 'Temp dir writeable', 'simply-static' ) => $this->is_temp_files_dir_writeable(),
+				__( 'Temp dir writable', 'simply-static' ) => $this->is_temp_files_dir_writeable(),
 			),
-			'MySQL'      => array(
+			$sections['mysql']      => array(
 				__( 'DELETE', 'simply-static' ) => $this->user_can_delete(),
 				__( 'INSERT', 'simply-static' ) => $this->user_can_insert(),
 				__( 'SELECT', 'simply-static' ) => $this->user_can_select(),
@@ -79,27 +87,27 @@ class Diagnostic {
 		);
 
 		if ( $this->options->get( 'destination_url_type' ) == 'absolute' ) {
-			$this->checks['URLs'][ __( 'Destination URL', 'simply-static' ) ] = $this->is_destination_host_a_valid_url();
+			$this->checks[ $sections['urls'] ][ __( 'Destination URL', 'simply-static' ) ] = $this->is_destination_host_a_valid_url();
 		}
 
 		if ( $this->options->get( 'delivery_method' ) == 'local' ) {
-			$this->checks['Filesystem'][ __( 'Local Dir', 'simply-static' ) ] = $this->is_local_dir_writeable();
+			$this->checks[ $sections['filesystem'] ][ __( 'Local Dir', 'simply-static' ) ] = $this->is_local_dir_writeable();
 		}
 
 		$additional_urls = Util::string_to_array( $this->options->get( 'additional_urls' ) );
 
 		foreach ( $additional_urls as $url ) {
-			$this->checks['URLs'][ $url ] = $this->is_additional_url_valid( $url );
+			$this->checks[ $sections['urls'] ][ $url ] = $this->is_additional_url_valid( $url );
 		}
 
 		$additional_files = Util::string_to_array( $this->options->get( 'additional_files' ) );
 		foreach ( $additional_files as $file ) {
-			$this->checks['Filesystem'][ $file ] = $this->is_additional_file_valid( $file );
+			$this->checks[ $sections['filesystem'] ][ $file ] = $this->is_additional_file_valid( $file );
 		}
 
 		// Check if URLs checks are empty.
-		if ( empty( $this->checks['URLs'] ) ) {
-			unset( $this->checks['URLs'] );
+		if ( empty( $this->checks[ $sections['urls'] ] ) ) {
+			unset( $this->checks[ $sections['urls'] ] );
 		}
 
 		// Check for incompatible plugins.
@@ -118,18 +126,22 @@ class Diagnostic {
 
 		foreach ( $activated_plugins as $plugin ) {
 			if ( in_array( $plugin['TextDomain'], $this->incompatible_plugins ) ) {
-				$this->checks['Plugins'][ $plugin['Name'] ] = $this->is_incompatible_plugin( $plugin );
+				$this->checks[ $sections['plugins'] ][ $plugin['Name'] ] = $this->is_incompatible_plugin( $plugin );
 				$plugin_count ++;
 			}
 		}
 
 		if ( $plugin_count === 0 ) {
-			$this->checks['Plugins']['Incompatible Plugins'] = array(
+			/* translators: %d: number of incompatible plugins. */
+			$incompatible_plugins_error = sprintf( __( '%d incompatible plugins are active', 'simply-static' ), $plugin_count );
+			$this->checks[ $sections['plugins'] ][ __( 'Incompatible Plugins', 'simply-static' ) ] = array(
 				'test'        => true,
 				'description' => __( 'No incompatible plugins are active on your website!', 'simply-static' ),
-				'error'       => sprintf( __( '%d incompatible plugins are active', 'simply-static' ), $plugin_count )
+				'error'       => $incompatible_plugins_error,
 			);
 		}
+
+		$this->checks = $this->filter_checks( $this->checks );
 
 		// Set transient for checks.
 		if ( ! get_transient( 'simply_static_checks' ) ) {
@@ -155,15 +167,38 @@ class Diagnostic {
 		return $this->checks;
 	}
 
+	/**
+	 * Allow extensions to add their own diagnostic checks.
+	 *
+	 * @param array $checks Diagnostic sections and checks.
+	 *
+	 * @return array
+	 */
+	protected function filter_checks( array $checks ): array {
+		/**
+		 * Filters the diagnostic sections and checks before they are cached.
+		 *
+		 * @param array      $checks      Diagnostic sections and checks.
+		 * @param Diagnostic $diagnostic Current diagnostic instance.
+		 */
+		$filtered_checks = apply_filters( 'ss_diagnostic_checks', $checks, $this );
+
+		return is_array( $filtered_checks ) ? $filtered_checks : $checks;
+	}
+
 	public function is_destination_host_a_valid_url() {
 		$destination_scheme = $this->options->get( 'destination_scheme' );
 		$destination_host   = $this->options->get( 'destination_host' );
 		$destination_url    = $destination_scheme . $destination_host;
+		/* translators: %s: destination URL. */
+		$valid_message      = sprintf( __( 'Destination URL %s is valid', 'simply-static' ), $destination_url );
+		/* translators: %s: destination URL. */
+		$invalid_message    = sprintf( __( 'Destination URL %s is not valid', 'simply-static' ), $destination_url );
 
 		return array(
 			'test'        => filter_var( $destination_url, FILTER_VALIDATE_URL ) !== false,
-			'description' => sprintf( __( 'Destination URL %s is valid', 'simply-static' ), $destination_url ),
-			'error'       => sprintf( __( 'Destination URL %s is not valid', 'simply-static' ), $destination_url )
+			'description' => $valid_message,
+			'error'       => $invalid_message,
 		);
 	}
 
@@ -196,9 +231,12 @@ class Diagnostic {
 			$message = null;
 		}
 
+		/* translators: %s: additional file or directory path. */
+		$valid_message = sprintf( __( 'Additional File/Dir %s is valid', 'simply-static' ), $file );
+
 		return array(
 			'test'        => $test,
-			'description' => sprintf( __( 'Additional File/Dir %s is valid', 'simply-static' ), $file ),
+			'description' => $valid_message,
 			'error'       => $message
 		);
 	}
@@ -251,6 +289,7 @@ class Diagnostic {
 		// W3 Total Cache.
 		if ( defined( 'W3TC_VERSION' ) && is_plugin_active( 'w3-total-cache/w3-total-cache.php' ) && in_array( 'w3-total-cache', $incompatible_plugins ) ) {
 			$response['test']  = false;
+			/* translators: %s: caching plugin name. */
 			$response['error'] = sprintf( esc_html__( 'Please disable caching (%s) before running a static export.', 'simply-static' ), esc_html( 'W3 Total Cache' ) );
 		}
 
@@ -401,39 +440,54 @@ class Diagnostic {
 	 * @return array
 	 */
 	public function is_incompatible_plugin( $plugin ) {
+		/* translators: %s: plugin name. */
+		$error_message = sprintf( __( '%s is not compatible with Simply Static.', 'simply-static' ), $plugin['Name'] );
+
 		return array(
 			'test'  => false,
-			'error' => sprintf( __( '%s is not compatible with Simply Static.', 'simply-static' ), $plugin['Name'] )
+			'error' => $error_message,
 		);
 	}
 
 	public function is_temp_files_dir_readable() {
 		$temp_files_dir = Util::get_temp_dir();
+		/* translators: %s: temporary files directory path. */
+		$readable_message = sprintf( __( 'Web server can read from Temp Files Directory: %s', 'simply-static' ), $temp_files_dir );
+		/* translators: %s: temporary files directory path. */
+		$unreadable_message = sprintf( __( "Web server can't read from Temp Files Directory: %s", 'simply-static' ), $temp_files_dir );
 
 		return array(
 			'test'        => is_readable( $temp_files_dir ),
-			'description' => sprintf( __( "Web server can read from Temp Files Directory: %s", 'simply-static' ), $temp_files_dir ),
-			'error'       => sprintf( __( "Web server can't read from Temp Files Directory: %s", 'simply-static' ), $temp_files_dir )
+			'description' => $readable_message,
+			'error'       => $unreadable_message,
 		);
 	}
 
 	public function is_temp_files_dir_writeable() {
 		$temp_files_dir = Util::get_temp_dir();
+		/* translators: %s: temporary files directory path. */
+		$writable_message = sprintf( __( 'Web server can write to Temp Files Directory: %s', 'simply-static' ), $temp_files_dir );
+		/* translators: %s: temporary files directory path. */
+		$unwritable_message = sprintf( __( "Web server can't write to Temp Files Directory: %s", 'simply-static' ), $temp_files_dir );
 
 		return array(
 			'test'        => is_writable( $temp_files_dir ),
-			'description' => sprintf( __( "Web server can write to Temp Files Directory: %s", 'simply-static' ), $temp_files_dir ),
-			'error'       => sprintf( __( "Web server can't write to Temp Files Directory: %s", 'simply-static' ), $temp_files_dir )
+			'description' => $writable_message,
+			'error'       => $unwritable_message,
 		);
 	}
 
 	public function is_local_dir_writeable() {
 		$local_dir = $this->options->get( 'local_dir' );
+		/* translators: %s: local destination directory path. */
+		$writable_message = sprintf( __( 'Web server can write to Local Directory: %s', 'simply-static' ), $local_dir );
+		/* translators: %s: local destination directory path. */
+		$unwritable_message = sprintf( __( 'Web server can not write to Local Directory: %s', 'simply-static' ), $local_dir );
 
 		return array(
-			'test'        => is_writable( $local_dir ),
-			'description' => sprintf( __( "Web server can write to Local Directory: %s", 'simply-static' ), $local_dir ),
-			'error'       => sprintf( __( "Web server can not write to Local Directory: %s", 'simply-static' ), $local_dir )
+			'test'        => is_string( $local_dir ) && Util::is_path_allowed_by_open_basedir( $local_dir ) && is_writable( $local_dir ),
+			'description' => $writable_message,
+			'error'       => $unwritable_message,
 		);
 	}
 
@@ -486,10 +540,15 @@ class Diagnostic {
 	}
 
 	public function php_version() {
+		/* translators: %s: minimum supported PHP version. */
+		$supported_message = sprintf( __( 'PHP version is >= %s', 'simply-static' ), self::$min_version['php'] );
+		/* translators: %s: minimum supported PHP version. */
+		$unsupported_message = sprintf( __( 'PHP version < %s', 'simply-static' ), self::$min_version['php'] );
+
 		return array(
 			'test'        => version_compare( phpversion(), self::$min_version['php'], '>=' ),
-			'description' => sprintf( __( 'PHP version is >= %s', 'simply-static' ), self::$min_version['php'] ),
-			'error'       => sprintf( __( 'PHP version < %s', 'simply-static' ), self::$min_version['php'] )
+			'description' => $supported_message,
+			'error'       => $unsupported_message,
 		);
 	}
 
@@ -509,10 +568,13 @@ class Diagnostic {
 			$test = false;
 		}
 
+		/* translators: %s: minimum supported cURL version. */
+		$version_error = sprintf( __( 'cURL version < %s', 'simply-static' ), self::$min_version['curl'] );
+
 		return array(
 			'test'        => $test,
 			'description' => __( 'cURL is available', 'simply-static' ),
-			'error'       => sprintf( __( 'cURL version < %s', 'simply-static' ), self::$min_version['curl'] )
+			'error'       => $version_error,
 		);
 	}
 
@@ -584,10 +646,13 @@ class Diagnostic {
 			);
 		}
 
+		/* translators: %s: URL of the Docker setup guide. */
+		$review_message = sprintf( __( 'If exports fail, please review: %s', 'simply-static' ), $docs_url );
+
 		return array(
 			'test'        => true,
 			'description' => __( 'Site URL looks fine for container access.', 'simply-static' ),
-			'error'       => sprintf( __( 'If exports fail, please review: %s', 'simply-static' ), $docs_url ),
+			'error'       => $review_message,
 		);
 	}
 
@@ -649,7 +714,7 @@ class Diagnostic {
 	public function check_error_from_response( $response ) {
 		if ( is_wp_error( $response ) ) {
 			$test    = false;
-			$message = sprintf( __( "Not a valid url.", 'simply-static' ) );
+			$message = __( 'Not a valid URL.', 'simply-static' );
 		} else {
 			$code = $response['response']['code'];
 
@@ -658,10 +723,18 @@ class Diagnostic {
 				$message = $code;
 			} else if ( in_array( $code, Page::$processable_status_codes ) ) {
 				$test    = false;
-				$message = sprintf( __( "Received a %s response. This might indicate a problem.", 'simply-static' ), $code );
+				$message = sprintf(
+					/* translators: %s: HTTP status code. */
+					__( 'Received a %s response. This might indicate a problem.', 'simply-static' ),
+					$code
+				);
 			} else {
 				$test    = true;
-				$message = sprintf( __( "Received a %s response.", 'simply-static' ), $code );
+				$message = sprintf(
+					/* translators: %s: HTTP status code. */
+					__( 'Received a %s response.', 'simply-static' ),
+					$code
+				);
 			}
 		}
 

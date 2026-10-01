@@ -69,11 +69,12 @@ class Plugin_Compatibility {
 	public function get_plugins() {
 
 		if ( count( $this->plugins ) === 0 ) {
+			$plugins = apply_filters( 'ss_compatible_plugins', Compatibility_API_Client::get_plugins() );
 			$this->plugins = array_map(
 				static function ( $plugin ) {
 					return self::normalize_plugin_data( $plugin );
 				},
-				require SIMPLY_STATIC_PATH . 'src/compatible-plugins.php'
+				is_array( $plugins ) ? $plugins : array()
 			);
 
 			usort(
@@ -99,6 +100,8 @@ class Plugin_Compatibility {
 		$default = [
 			'name'                     => '',
 			'slug'                     => '',
+			'status'                   => 'fully_compatible',
+			'config_notes'             => '',
 			'version'                  => '',
 			'author'                   => '',
 			'author_profile'           => '',
@@ -155,14 +158,22 @@ class Plugin_Compatibility {
 			'plugin-install',
 			'plugin-install-network'
 		], true ) ) {
+			$asset_file = SIMPLY_STATIC_PATH . '/assets/install-plugins/build/index.asset.php';
+			$asset      = file_exists( $asset_file )
+				? require $asset_file
+				: array( 'dependencies' => array( 'wp-dom-ready', 'wp-i18n' ), 'version' => SIMPLY_STATIC_VERSION );
 
 			wp_enqueue_script(
 				self::ASSET_HANDLE,
 				SIMPLY_STATIC_URL . '/assets/install-plugins/build/index.js',
-				[],
-				SIMPLY_STATIC_VERSION,
+				isset( $asset['dependencies'] ) ? $asset['dependencies'] : array( 'wp-dom-ready', 'wp-i18n' ),
+				isset( $asset['version'] ) ? $asset['version'] : SIMPLY_STATIC_VERSION,
 				true
 			);
+
+			if ( function_exists( 'wp_set_script_translations' ) ) {
+				wp_set_script_translations( self::ASSET_HANDLE, 'simply-static', SIMPLY_STATIC_PATH . '/languages' );
+			}
 
 			wp_enqueue_style(
 				'ss-admin',
@@ -251,10 +262,16 @@ class Plugin_Compatibility {
 	 */
 	public function filter_plugin_row_meta( $plugin_meta, /** @noinspection PhpUnusedParameterInspection */ $plugin_file, $plugin_data ) {
 
-		$ss_plugins = wp_list_pluck( $this->get_plugins(), 'slug' );
+		$ss_plugins = array();
+		foreach ( $this->get_plugins() as $compatible_plugin ) {
+			$ss_plugins[ $compatible_plugin['slug'] ] = $compatible_plugin;
+		}
 
-		if ( ! empty( $plugin_data['slug'] ) && in_array( $plugin_data['slug'], $ss_plugins, true ) ) {
-			$plugin_meta[] = esc_html__( 'Simply Static Compatible', 'simply-static' );
+		if ( ! empty( $plugin_data['slug'] ) && isset( $ss_plugins[ $plugin_data['slug'] ] ) ) {
+			$record        = $ss_plugins[ $plugin_data['slug'] ];
+			$plugin_meta[] = 'compatible_with_config' === $record['status']
+				? esc_html__( 'Simply Static Compatible with configuration', 'simply-static' )
+				: esc_html__( 'Simply Static Compatible', 'simply-static' );
 		}
 
 		return $plugin_meta;

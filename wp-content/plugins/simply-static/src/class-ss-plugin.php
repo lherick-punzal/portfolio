@@ -216,6 +216,7 @@ class Plugin {
 		require_once $path . 'src/admin/inc/class-ss-admin-dashboard-widget.php';
 		require_once $path . 'src/admin/inc/class-ss-migrate-settings.php';
 		require_once $path . 'src/class-ss-multisite.php';
+		require_once $path . 'src/class-ss-compatibility-api-client.php';
 		require_once $path . 'src/class-ss-plugin-compatibility.php';
 	}
 
@@ -615,7 +616,11 @@ class Plugin {
 			if ( $parent_static_page ) {
 				$display_url = Util::get_path_from_local_url( $parent_static_page->url );
 				$parent_url  = esc_url( $parent_static_page->url );
-				$label       = sprintf( __( 'Found on %s', 'simply-static' ), $display_url );
+				$label       = sprintf(
+					/* translators: %s: URL on which the exported resource was discovered. */
+					__( 'Found on %s', 'simply-static' ),
+					$display_url
+				);
 				$msg         .= $parent_url
 					? '<a href="' . esc_attr( $parent_url ) . '" target="_blank" rel="noopener noreferrer">' . esc_html( $label ) . '</a>'
 					: esc_html( $label );
@@ -822,7 +827,7 @@ class Plugin {
 			$local_dir = apply_filters( 'ss_local_dir', $this->options->get( 'local_dir' ) );
 
 			// Make sure the directory exists and is not empty.
-			if ( is_dir( $local_dir ) ) {
+			if ( is_string( $local_dir ) && Util::is_path_allowed_by_open_basedir( $local_dir ) && is_dir( $local_dir ) ) {
 				$iterator = new \FilesystemIterator( $local_dir, \FilesystemIterator::SKIP_DOTS );
 				if ( $iterator->valid() ) {
 					Transfer_Files_Locally_Task::delete_local_directory_static_files( $local_dir, $this->options );

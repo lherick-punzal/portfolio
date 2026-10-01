@@ -303,7 +303,12 @@ class Fetch_Urls_Task extends Task {
 		$total_pages = (int) apply_filters( 'ss_total_pages', Page::query()->count() );
 		$pages_processed = $total_pages - $pages_remaining;
 
-		$message = sprintf( __( "Fetched %d of %d pages/files", 'simply-static' ), $pages_processed, $total_pages );
+		$message = sprintf(
+			/* translators: 1: number of pages/files fetched, 2: total number of pages/files. */
+			__( 'Fetched %1$d of %2$d pages/files', 'simply-static' ),
+			$pages_processed,
+			$total_pages
+		);
 		$this->save_status_message( $message );
 
 		// If we've processed all pages for this export, signal completion of this task.
@@ -744,12 +749,12 @@ class Fetch_Urls_Task extends Task {
 			return;
 		}
 
-		// Skip URLs that resolve to a non-published post (trashed, draft, private, etc.)
+		// Skip URLs that resolve to a non-public post (trashed, draft, private, etc.)
 		$resolved_post_id = url_to_postid( $child_url );
 		if ( $resolved_post_id > 0 ) {
 			$resolved_status = get_post_status( $resolved_post_id );
-			if ( $resolved_status && 'publish' !== $resolved_status ) {
-				Util::debug_log( sprintf( 'Skipping non-published post URL (status: %s): %s', $resolved_status, $child_url ) );
+			if ( $resolved_status && ! Util::is_public_post_status( $resolved_status ) ) {
+				Util::debug_log( sprintf( 'Skipping non-public post URL (status: %s): %s', $resolved_status, $child_url ) );
 				return;
 			}
 		}
@@ -871,7 +876,12 @@ class Fetch_Urls_Task extends Task {
 	 * @return string
 	 */
 	protected function processed_pages_message( $processed, $total ) {
-		return sprintf( __( "Fetched %d of %d pages/files", 'simply-static' ), $processed, $total );
+		return sprintf(
+			/* translators: 1: number of pages/files fetched, 2: total number of pages/files. */
+			__( 'Fetched %1$d of %2$d pages/files', 'simply-static' ),
+			$processed,
+			$total
+		);
 	}
 
 	/**
